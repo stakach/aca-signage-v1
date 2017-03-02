@@ -1,0 +1,18 @@
+
+$('#footer-right').html('<%= escape_javascript(render('edit_right'))%>');
+
+{
+	var index,
+		el = $('#playlist_media_transition_effect');
+	for (index in EFFECTS) {
+		el.append($('<option>', {
+			value: index,
+			text: EFFECTS[index]
+		}));
+	}
+	el.val(el.data('current'));
+}
+
+$('#playlist_media_seconds').focus();
+
+

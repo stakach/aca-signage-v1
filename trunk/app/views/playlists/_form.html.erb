@@ -1,0 +1,28 @@
+<%= form_for(@playlist) do |f| %>
+
+	<p>
+		<%= f.label :name, t(:playlist_edit_name) %><%= mark_required(@playlist, :name) %><br />
+		<%= f.text_field :name %>
+	</p>
+	<p>
+		<%= f.label :comment, t(:playlist_edit_comment) %><%= mark_required(@playlist, :comment) %><br />
+		<%= f.text_area :comment %>
+	</p>
+	<p>
+		<%= f.label :default_timeout, t(:playlist_timeout) %><%= mark_required(@playlist, :default_timeout) %><br />
+		<%= f.text_field :default_timeout %>
+	</p>
+	<p>
+		<%= f.label :default_transition %><%= mark_required(@playlist, :default_transition) %><br />
+		<%= f.select :default_transition, [] %>
+	</p>
+	<p>
+		<table>
+			<tr>
+				<td><%= f.check_box :random %></td>
+				<td><%= f.label :random, 'Shuffle Playback' %><%= mark_required(@playlist, :random) %></td>
+			</tr>
+		</table>
+	</p>
+
+<% end %>

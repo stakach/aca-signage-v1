@@ -1,0 +1,34 @@
+
+<table class="list playitems">
+	<thead><tr>
+		<th class="ordered asc"></th>
+		<th><%= t(:playlist_edit_name) %></th>
+		<th><%= t(:playitem_runtime) %></th>
+		<th>Transition</th>
+		<th><%= t(:playlist_list_type) %></th>
+	</tr></thead>
+	<tbody>
+		
+	</tbody>
+</table>
+
+
+
+<%= content_for :contextmenu do %>
+	<li id="edit-playitem">
+		<%= image_tag('led-icons/textfield_rename.png', :alt => t(:edit), :title => t(:playlist_edit_timeout)) %> Edit
+	</li>
+<% end %>
+
+<%= content_for :preview do %>
+	<%= image_tag('footer/playlist.png', :alt => t(:preview)) %>
+<% end %>
+
+
+<%= content_for :script do %>
+
+	<%= javascript_include_tag "locales/#{I18n.locale}/playlists-#{I18n.locale}" %>
+	<%= javascript_include_tag "playlists" %>
+
+<% end %>
+

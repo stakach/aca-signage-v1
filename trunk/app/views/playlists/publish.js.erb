@@ -1,0 +1,3 @@
+$.noticeAdd({ text: "<%= t(:playlist) %> '<%= escape_javascript(@playlist.name) %>' <%= t(:update_success) %>.", stayTime: 6000 });
+$('#dialog').dialog('close');
+<%= render :template => 'playitems/update_playlist' %>

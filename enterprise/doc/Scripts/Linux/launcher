@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "Launching Chrome"
+
+bash cleanchrome & .
+
+until chromium-browser $1 --kiosk --disable-translate --allow-running-insecure-content --no-default-browser-check --no-message-box --noerrdialogs --reload-killed-tabs --disable-desktop-notifications --disk-cache-size 5221225472; do
+	sleep 1
+	bash cleanchrome & .
+done
+

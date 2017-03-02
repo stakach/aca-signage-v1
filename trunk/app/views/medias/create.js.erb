@@ -1,0 +1,4 @@
+
+<% if @media.new_record? %>
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @media)) %>", stay: true });
+<% end %>

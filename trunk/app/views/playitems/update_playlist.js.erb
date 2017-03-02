@@ -1,0 +1,6 @@
+
+$('#playlist_<%= @playlist.id %>').replaceWith('<%= escape_javascript(render('layouts/content/playlist', :playlist => @playlist))%>');
+
+<% if @playitems.nil? %>
+	newSidebarItem($('#playlist_<%= @playlist.id %>'));		// Register the updated playlist in the view (if not selected)
+<% end %>

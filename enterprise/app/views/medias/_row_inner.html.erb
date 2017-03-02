@@ -1,0 +1,18 @@
+
+<td class='name'><%= media.name %></td>
+<td class='comment'><%= truncate(media.comment, :length => 60) %></td>
+<td class='state'><%= media.state %></td>
+<td class='file-type'><%= media.classification %></td>
+<td class='time-entry' title="<%= media.created_at.utc.iso8601 %>"></td>
+<td class='download'>
+	<% if media.media_type > 2 %>
+		<%= link_to image_tag('led-icons/link.png', :alt => t(:media_url), :title => t(:media_url)), media.file_path unless media.media_type == 3 %>
+	<% else %>
+		<% 
+			url = media.url_path
+			type = 'application/octet-stream'
+			filename = File.basename(media.file_path)
+		%>
+		<%= link_to image_tag('led-icons/disk.png', {:alt => t(:media_download), :title => t(:media_download)}), url, {:draggable => "true", :class => 'dnd-downloads', "downloadurl" => "#{type}:#{filename}:#{request.protocol + request.host_with_port + url}"} %>
+	<% end %>
+</td>

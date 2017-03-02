@@ -1,0 +1,58 @@
+
+$('#footer-right').html('<%= escape_javascript(render('medias/preview_right', :media => @media))%>');
+$('#footer-left').html('<%= escape_javascript(render('medias/preview_left', :media => @media))%>');
+
+//
+// Normalise the data
+//
+var media = <%= @media_json.html_safe %>, index, format;
+if(media.media_type < 10) {
+	for (index in media.formats) {
+		format = media.formats[index];
+		
+		if(format.workflow_state == 'ready') {
+			format.file_path = format.file_path.split('public')[1];
+		}
+	}
+}
+
+//
+// Build the element
+//
+var element = $preview.data('element');
+if (!!element) {
+	element.destroy();
+}
+$preview.html('');
+element = loadElement($preview, media, {
+	ignore_timeout: true,
+	ignore_play: true,
+	controls: true
+});
+element.callback = function(data, message) {
+	if(data == ELEMENT.ready) {
+		scalePreview();
+		element.play();
+		element.unsubscribe(element.callback);
+	} else if(data == ELEMENT.error) {
+		$preview.html('<%= escape_javascript(image_tag('footer/unknown.png', :alt => @media.name, :title => t(:media_preview_fail))) %>');
+		scalePreview();
+		element.unsubscribe(element.callback);
+	}
+}
+$preview.data('element', element);
+element.subscribe(element.callback);
+scalePreview();
+
+
+
+$('#footer-left .editable').click(function(){
+	$.ajax({
+		type: "GET", url: '<%= edit_media_path(@media.id) %>',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, '<%= "#{t(:media)} #{t(:edit_failed)}" %>', errorThrown);
+		}
+	});
+});
+

@@ -1,0 +1,46 @@
+
+
+function checkIEOverlay() {
+	var len = $('li.playlist-drop a.show').length;
+	if (len > 0)
+		window.external.msSiteModeSetIconOverlay('http://' + window.location.host + '<%= asset_path 'ie9icons/notice.ico' %>', 'One or more playlists are not published');
+	else
+		window.external.msSiteModeClearIconOverlay();
+}
+
+
+function ieDoPreview() {
+	previewButton();
+}
+
+
+function checkIEPreview() {
+	var len = $('li.playlist-drop span.selected').length;
+	if (len > 0)
+		window.external.msSiteModeShowThumbBar();
+}
+
+
+$(function() {
+
+	try {
+		// Check if the website was launched from a pinned site.
+		if (window.external.msIsSiteMode()) {
+
+			var iePrevButton = window.external.msSiteModeAddThumbBarButton('http://' + window.location.host + '<%= asset_path 'ie9icons/preview.ico' %>', 'preview');
+			document.addEventListener('msthumbnailclick', ieDoPreview, false);
+
+			//
+			// Check if there are playlists requiring publishing
+			//
+			$('body').ajaxSuccess(function() {
+				checkIEOverlay();
+			});
+			checkIEOverlay();
+			checkIEPreview();
+		}
+	}
+	catch (e) { }
+
+});
+

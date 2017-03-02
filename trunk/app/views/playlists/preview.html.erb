@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Playlist Preview</title>
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+	
+	<%= javascript_include_tag "player/signage" %>
+	
+	
+	<style type="text/css" media="screen">
+		/* In-line style sheet ensures the screen starts black */
+		
+		* { padding: 0; margin: 0;}
+		
+		
+		html, body {
+			height: 100%;
+			width: 100%;
+			overflow:hidden;
+			
+			background-color: #000;
+		}
+		
+		#container {
+			width: 100%;
+			height: 100%;
+		}
+		
+		section {
+			height: 100%;
+			width: 100%;
+		}
+		
+		
+		#fader, article {
+			display: block;
+			position: absolute;
+			height: 100%;
+			width: 100%;
+		}
+		
+		#fader {
+			background-color: #000;		/* Default to black */
+		}
+		
+		article > div {
+			position: relative;
+			height: 100%;
+			width: 100%;
+			
+			text-align: center;			/* Center child elements */
+			background-color: #000;		/* Default to black */
+		}
+		
+		video, iframe {
+			height: 100%;
+			width: 100%;
+			border:0px!important;
+		}
+		
+		article.previous {
+			z-index: -10;	/* We want to make sure it is not visible */
+		}
+	</style>
+	
+	<%= stylesheet_link_tag "player/transitions" %>
+</head>
+<body>
+	<div id="fader">
+	</div>
+	<div id="container">
+		<section>
+			<article class="previous">
+				<div>
+					
+				</div>
+			</article>
+			<article>		<!-- The next item -->
+				<div>
+					
+				</div>
+			</article>
+			<article>		<!-- The currently displayed item -->
+				<div>
+					
+				</div>
+			</article>
+		</section>
+	</div>
+</body>
+</html>

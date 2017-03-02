@@ -1,0 +1,43 @@
+
+<table class="list displays">
+	<thead><tr>
+		<th><%= t(:displays_list_online) %></th>
+		<th data-dbcol="displays.name" class="orderable"><%= t(:displays_edit_name) %></th>
+		<th data-dbcol="displays.building" class="orderable"><%= t(:displays_edit_building) %></th>
+		<th data-dbcol="displays.location" class="orderable"><%= t(:displays_edit_location) %></th>
+		<th><%= t(:displays_list_shared) %></th>
+		<th data-dbcol="displays.created_at" class="orderable ordered desc"><%= t(:added).capitalize %></th>
+	</tr></thead>
+	<tbody>
+		
+	</tbody>
+</table>
+
+
+<%= content_for :dynamic do %>
+	
+	
+<% end %>
+
+<%= content_for :contextmenu do %>
+	<% if (current_user.user_groups.limit(2).count > 1 || current_group.children.limit(2).count >= 1) && current_permissions.admin? %>
+		<li id="share"><%= image_tag('led-icons/group.png', :alt => t(:displays_share), :title => t(:displays_share)) %> <%= t(:displays_share) %></li>
+	<% end %>
+	<li id="edit-display">
+		<%= image_tag('led-icons/textfield_rename.png', :alt => t(:edit), :title => t(:edit)) %> <%= t(:edit) %>
+	</li>
+<% end %>
+
+
+<%= content_for :preview do %>
+	<%= image_tag('footer/display.png', :alt => 'Displays') %>
+<% end %>
+
+
+<%= content_for :script do %>
+
+	<%= javascript_include_tag "locales/#{I18n.locale}/displays-#{I18n.locale}" %>
+	<%= javascript_include_tag "displays" %>
+
+<% end %>
+

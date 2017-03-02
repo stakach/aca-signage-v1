@@ -1,0 +1,40 @@
+
+<%= form_for(media, {:url => media_path(media.id), :remote => true, :method => :put}) do |f| %>
+
+	<p>
+		<%= f.text_field :name %>
+	</p>
+	<p>
+		<%= f.text_area :comment %>
+	</p>
+
+	<table>
+		<tbody>
+			<tr>
+				<td class="desc"><%= t(:media_edit_type) %>:</td>
+				<td><%= media.classification %></td>
+			</tr>
+			<tr>
+				<% if media.media_type >= 10 %>
+					<td class="desc"><%= f.label :file_path, t(:media_edit_path) %></td>
+					<td><%= f.text_field :file_path %></td>
+				<% else %>
+					<td class="desc"><%= t(:media_edit_state) %>:</td>
+					<td><%= media.state %></td>
+				<% end %>
+			</tr>
+			<tr>
+				<td class="desc"><%= f.label :background, 'Background' %></td>
+				<td><%= f.text_field :background, {:style => "background-color:##{media.background};"} %></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<div class="edit-save">
+		<%= f.submit t(:update) %>
+	</div>
+	
+<% end %>
+
+<%= render 'shared/edit_cancel' %>
+

@@ -1,0 +1,33 @@
+
+<%= form_for(group, {:url => sub_group_path(group.id), :remote => true, :method => :put}) do |f| %>
+
+	<p>
+		<%= f.text_field :description %>
+	</p>
+	<p>
+		<%= f.text_area :notes %>
+	</p>
+
+	<table>
+		<tr>
+			<td class="desc"><%= f.label :domain %>:</td>
+			<td><%= f.text_field :domain %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :identifier, 'LDAP object name' %>:</td>
+			<td><%= f.text_field :identifier %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :timezone, t(:user_edit_timezone) %>:</td>
+			<td><%= f.time_zone_select(:timezone, nil, :default => current_group.timezone) %></td>
+		</tr>
+	</table>
+	
+	<div class="edit-save">
+		<%= f.submit t(:update) %>
+	</div>
+	
+<% end %>
+
+<%= render 'shared/edit_cancel' %>
+

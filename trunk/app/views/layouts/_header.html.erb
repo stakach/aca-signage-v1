@@ -1,0 +1,22 @@
+<header>
+	<div id="header-wrapper">
+		<div class="logo">
+			<%= image_tag('logo.png', :alt => t(:sydney_signage), :title => t(:sydney_signage)) %>
+		</div>
+	</div>
+	
+	<div id="search-form">
+		<%= image_tag('ajax-loader.gif', :id => 'searching', :alt => t(:searching), :title => t(:searching)) %>
+		<%= form_tag medias_path, :method => :get, :remote => true do %>
+			<span class="sbox_l"><%= image_tag('search/srch_l.png', :alt => t(:searching)) %></span>
+			<span class="sbox"><%= text_field_tag :search, params[:search] %></span>
+			<span class="sbox_r" id="srch_clear"><%= image_tag('search/srch_r.png', :alt => t(:searching)) %></span>
+		<% end %>
+	</div>
+	
+	<%= link_to image_tag('v4icons/settings.png', :alt => 'account', :title => 'My Account Settings', :id => 'account-settings'), authentications_path %>
+	
+	<div id="preview">
+		<%= image_tag('play-disabled.png', :alt => t(:preview), :title => t(:preview)) %>
+	</div>
+</header>

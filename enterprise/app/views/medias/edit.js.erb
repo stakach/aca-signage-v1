@@ -1,0 +1,19 @@
+
+$('#footer-left').html('<%= escape_javascript(render('edit_left', :media => @media))%>');
+$('#media_name').focus();
+$('#media_background').ColorPicker({
+	onBeforeShow: function () {
+		$(this).ColorPickerSetColor(this.value);
+	},
+	onShow: function (colpkr) {
+		$(colpkr).fadeIn(500);
+		return false;
+	},
+	onHide: function (colpkr) {
+		$(colpkr).fadeOut(500);
+		return false;
+	},
+	onChange: function (hsb, hex, rgb) {
+		$('#media_background').val(hex).css('backgroundColor', '#' + hex);
+	}
+});

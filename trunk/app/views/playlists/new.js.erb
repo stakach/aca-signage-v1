@@ -1,0 +1,32 @@
+
+$('#dialog').html('<%= escape_javascript(render('form'))%>');
+
+{
+	var index,
+		el = $('#playlist_default_transition');
+	for (index in EFFECTS) {
+		el.append($('<option />', {
+			value: index,
+			text: EFFECTS[index]
+		}));
+	}
+}
+
+$('#dialog').dialog({
+	modal: true,
+	title: '<%= t(:new) %> <%= t(:playlist) %>',
+	buttons: {
+		'<%= t(:create) %>': function() {
+			$.ajax({
+				type: "POST",
+				dataType: 'script',
+				url: $('#dialog form').attr('action'),
+				data: $('#dialog form').serialize(),
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, '<%= "#{t(:unable_to_create)} #{t(:playlist)}" %>', errorThrown);
+				}
+			});
+		}
+	}
+});
+

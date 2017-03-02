@@ -1,0 +1,6 @@
+
+$('table.auth_sources tbody').append(
+<% @auth_sources.each do |auth_source| %>
+	"<%= escape_javascript(render('row', :auth_source => auth_source))%>" + 
+<% end %>
+"");

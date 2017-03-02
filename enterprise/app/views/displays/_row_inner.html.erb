@@ -1,0 +1,7 @@
+
+<td class='online'><span<%= display_uptime(display) %>><span></td>
+<td class='name'><%= display.name %></td>
+<td class='building'><%= display.building %></td>
+<td class='location'><%= truncate(display.location, :length => 30) %></td>
+<td class='shared'><%= shared?(display) %></td>
+<td class='time-entry' title="<%= display.created_at.utc.iso8601 %>"></td>

@@ -1,0 +1,12 @@
+
+<% if !@group.new_record? %>
+	var item = $("<%= escape_javascript(render('layouts/content/display_group', :group => @group))%>").hide().prependTo('.display-groups');
+	$('#dialog').dialog("close");
+	item.fadeIn("slow");
+	item.makeDroppable().droppable("option", "accept", '.playlist-drop');
+	newSidebarItem($('#group_<%= @group.id %>'));			// Register the new display group in the view
+	
+	$.noticeAdd({ text: "<%= escape_javascript("#{t(:group)} '#{@group.name}' #{t(:created)}.") %>", stayTime: 6000 });
+<% else %>
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @group)) %>", stay: true });
+<% end %>

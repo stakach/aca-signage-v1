@@ -1,0 +1,14 @@
+
+<% if @saved %>
+
+	<%= render :template => 'users/show' %>
+	$.noticeAdd({ text: "<%= "#{t(:user)} #{t(:update_success)}" %>.", stayTime: 6000 });
+	$('#user_<%= @user.id %>').replaceWith('<%= escape_javascript(render('users/row', :user => @user))%>');
+	$('#user_<%= @user.id %>').addClass('context-menu-selection');
+	$('#user_<%= @user.id %> td.time-entry').humaneDates();
+
+<% else %>
+
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @user)) %>", stay: true });
+
+<% end %>

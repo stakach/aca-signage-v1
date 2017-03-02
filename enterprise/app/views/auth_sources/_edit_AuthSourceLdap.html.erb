@@ -1,0 +1,74 @@
+
+<%= form_for(auth_source, {:as => :auth_source, :url => auth_source_path(auth_source.id), :remote => true, :method => :put}) do |f| %>
+
+	<div id="footer-left-wrapper">
+		<div id="footer-left">
+			<p>
+				<%= f.text_field :name %>
+			</p>
+			<p>
+				<%= t(:auth_sources_edit_dn) %>: <%= f.text_area :base_dn %>
+			</p>
+			
+			<table>
+				<tr>
+					<td class="desc"><%= f.label :host, t(:auth_sources_edit_host) %>:</td>
+					<td><%= f.text_field :host %></td>
+				</tr>
+				<tr>
+					<td class="desc"><%= f.label :port, t(:auth_sources_edit_port) %>:</td>
+					<td><%= f.text_field :port %></td>
+				</tr>
+				<tr>
+					<td class="desc"><%= f.label :tls, t(:auth_sources_edit_secured) %>:</td>
+					<td class="small-edit"><%= f.check_box :tls %></td>
+				</tr>
+				<tr>
+					<td class="desc"><%= f.label :account, t(:auth_sources_edit_account) %>:</td>
+					<td><%= f.text_field :account %></td>
+				</tr>
+				<tr class="ldap-change-password">
+					<td class="right"><%= image_tag('led-icons/lock.png', :alt => t(:auth_sources_change_password), :title => t(:auth_sources_change_password)) %></td>
+					<td><%= link_to t(:auth_sources_change_password), change_password_auth_sources_path, :remote => true %></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+	
+	<div id="footer-right-wrapper">
+		<div id="footer-right">
+			<h1><%= t(:auth_sources_preview_title) %></h1>
+			
+			<table>
+				<tr>
+					<td class="desc"><%= f.label :attr_firstname, t(:auth_sources_edit_first_name) %>:</td>
+					<td><%= f.text_field :attr_firstname %></td>
+				</tr>
+				<tr>
+					<td class="desc"><%= f.label :attr_lastname, t(:auth_sources_edit_last_name) %>:</td>
+					<td><%= f.text_field :attr_lastname %></td>
+				</tr>
+				<tr>
+					<td class="desc"><%= f.label :attr_login, t(:auth_sources_edit_login) %>:</td>
+					<td><%= f.text_field :attr_login %></td>
+				</tr>
+				<tr>
+					<td class="desc"><%= f.label :attr_mail, t(:auth_sources_edit_email) %>:</td>
+					<td><%= f.text_field :attr_mail %></td>
+				</tr>
+				<tr>
+					<td class="desc"><%= f.label :attr_member, t(:auth_sources_edit_group) %>:</td>
+					<td><%= f.text_field :attr_member %></td>
+				</tr>
+			</table>
+		
+			<div class="edit-save">
+				<%= f.submit t(:update) %>
+			</div>
+			
+			<%= render 'shared/edit_cancel' %>
+		</div>
+	</div>
+<% end %>
+

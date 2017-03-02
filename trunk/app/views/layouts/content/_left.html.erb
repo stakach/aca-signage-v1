@@ -1,0 +1,118 @@
+<div id="left-wrapper">
+	<div id="left">
+		<div id="left-content">
+			<% if current_user.user_groups.limit(2).count > 1 %>
+			
+				<%= form_tag '/switch_group', :method => :put do %>
+					<div class="ui-widget">
+						<label>Group: </label>
+						<%= select_tag("group_select", "<option value='#{current_parent.id}'>#{current_parent.description}</option>".html_safe) %>
+					</div>
+				<% end %>
+			
+			<% end %>
+			<% if (current_user.system_admin || current_permissions.admin?) && current_parent.children.exists? %>
+				<%= form_tag '/switch_subgroup', :method => :put do %>
+					<div class="ui-widget">
+						<label>Sub-Group: </label>
+						<% if current_parent == current_group %>
+							<%= select_tag("subgroup_select", "<option value=''></option>".html_safe) %>
+						<% else %>
+							<%= select_tag("subgroup_select", "<option value='#{current_group.id}'>#{current_group.description}</option>".html_safe) %>
+						<% end %>
+					</div>
+				<% end %>
+			 <% end %>
+			<nav>
+				<ul id="sidemenu" class="pagelinks">
+					<li><span class="title"><%= t(:library) %></span>
+						<ul class="libraries">
+							<li>
+								<span class="selection<%= " selected" if @medias %>">
+									<%= link_to image_tag('led-icons/film.png', :alt => t(:media), :title => t(:media)) + t(:media), medias_path %>
+									<span class='options'>
+										<%= link_to image_tag('led-icons/add.png', :alt => "#{t(:add)} #{t(:media)}", :title => "#{t(:add)} #{t(:media)}"), new_media_path, :remote => true %>
+									</span>
+								</span>
+							</li>
+							<li>
+								<span class="selection<%= " selected" if @displays %>">
+									<%= link_to image_tag('led-icons/television.png', :alt => t(:displays), :title => t(:displays)) + t(:displays), displays_path %>
+									<span class='options'>
+										<%= link_to image_tag('led-icons/add.png', :alt => "#{t(:add)} #{t(:display)}", :title => "#{t(:add)} #{t(:display)}"), new_display_path, :remote => true %>
+									</span>
+								</span>
+							</li>
+						</ul>
+					</li>
+					<li><span id="playlist-title" class="title"><%= t(:playlists).upcase %> <%= link_to image_tag('led-icons/add.png', :alt => "#{t(:new)} #{t(:playlist)}", :title => "#{t(:new)} #{t(:playlist)}"), new_playlist_path, :remote => true %></span>
+						<ul class="playlists main">
+							<!-- 
+								Enumerate Playlists here:
+							 -->
+							
+							<% @playlists.each do |playlist| %>
+								<%= render('layouts/content/playlist', :playlist => playlist) %>
+							<% end %>
+						</ul>
+					</li>
+					<li><span class="title"><%= t(:groups).upcase %> <%= link_to image_tag('led-icons/add.png', :alt => "#{t(:new)} #{t(:group)}", :title => "#{t(:new)} #{t(:group)}"), new_group_path, :remote => true %></span>
+						<ul class="display-groups">
+							<!-- 
+								Enumerate Display Groupings here:
+							 -->
+							<% @groups.each do |group| %>
+								<%= render('layouts/content/display_group', :group => group) %>
+							<% end %>
+						</ul>
+					</li>
+					<% if current_user.system_admin || current_permissions.admin? %>
+						<li><span class="title"><%= t(:settings) %></span>
+							<ul class="settings">
+								<li>
+									<span class="selection<%= " selected" if @users %>">
+										<%= link_to image_tag('led-icons/user.png', :alt => t(:users), :title => t(:users)) + t(:users), users_path %>
+										<span class='options'>
+											<%= link_to image_tag('led-icons/add.png', :alt => "#{t(:add)} #{t(:user)}", :title => "#{t(:add)} #{t(:user)}"), new_user_path, :remote => true %>
+										</span>
+									</span>
+								</li>
+								<% if current_user.system_admin || current_permissions.group_manager? || current_permissions.domain_manager? %>
+									<li>
+										<span class="selection<%= " selected" if @subgroups %>">
+											<%= link_to image_tag('led-icons/group.png', :alt => 'Groups', :title => 'Groups') + 'Groups', sub_groups_path %>
+											<span class='options'>
+												<%= link_to image_tag('led-icons/add.png', :alt => "#{t(:add)} #{t(:user)}", :title => "#{t(:add)} #{t(:user)}"), new_sub_group_path, :remote => true %>
+											</span>
+										</span>
+									</li>
+								<% end %>
+								<% if current_user.system_admin %>
+									<li>
+										<span class="selection<%= " selected" if @auth_sources %>">
+											<%= link_to image_tag('led-icons/lock.png', :alt => t(:authentication_servers), :title => t(:authentication_servers)) + t(:authentication), auth_sources_path %>
+											<span class='options'>
+												<%= link_to image_tag('led-icons/add.png', :alt => "#{t(:add)} #{t(:auth_source)}", :title => "#{t(:add)} #{t(:auth_source)}"), new_auth_source_path, :remote => true %>
+											</span>
+										</span>
+									</li>
+									<li>
+										<span class="selection<%= " selected" if @converters %>">
+											<%= link_to image_tag('led-icons/doc_convert.png', :alt => t(:converters), :title => t(:converters)) + t(:converters), converters_path %>
+											<span class='options'>
+												<%= link_to image_tag('led-icons/add.png', :alt => "#{t(:add)} #{t(:converter)}", :title => "#{t(:add)} #{t(:converter)}"), new_converter_path, :remote => true %>
+											</span>
+										</span>
+									</li>
+								<% end %>
+							</ul>
+						</li>
+					<% end %>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<div id="splitter" class="ui-resizable-e ui-resizable-handle" style="z-index:250">
+	</div>
+</div>
+

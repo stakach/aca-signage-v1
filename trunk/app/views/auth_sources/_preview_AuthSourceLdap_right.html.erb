@@ -1,0 +1,26 @@
+
+<h1><%= t(:auth_sources_preview_title) %></h1>
+
+<table>
+	<tr>
+		<td class="desc"><%= t(:auth_sources_edit_first_name) %>:</td>
+		<td class="editable"><%= auth_source.attr_firstname %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:auth_sources_edit_last_name) %>:</td>
+		<td class="editable"><%= auth_source.attr_lastname %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:auth_sources_edit_login) %>:</td>
+		<td class="editable"><%= auth_source.attr_login %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:auth_sources_edit_email) %>:</td>
+		<td class="editable"><%= auth_source.attr_mail %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:auth_sources_edit_group) %>:</td>
+		<td class="editable"><%= auth_source.attr_member %></td>
+	</tr>
+</table>
+

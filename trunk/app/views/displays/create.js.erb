@@ -1,0 +1,14 @@
+
+<% if !@display.new_record? %>
+	var item = $("<%= escape_javascript(render('row', :display => @display))%>").prependTo('table.displays tbody');
+	$('#dialog').dialog("close");
+	$('#display_<%= @display.id %> td.time-entry').humaneDates();
+	
+	$.noticeAdd({ text: "<%= escape_javascript("#{t(:display)} '#{@display.name}' #{t(:created)}.") %>", stayTime: 6000 });
+	
+	listLength += 1;
+	defaultPreview(); 	// Update the preview
+	customPreview();
+<% else %>
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @display)) %>", stay: true });
+<% end %>

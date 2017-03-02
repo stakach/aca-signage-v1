@@ -1,0 +1,12 @@
+
+<% if !@playlist.new_record? %>
+	var item = $("<%= escape_javascript(render('layouts/content/playlist', :playlist => @playlist))%>").hide().prependTo('#sidemenu ul.playlists.main');
+	$('#dialog').dialog("close");
+	item.fadeIn("slow");
+	item.playlistDraggable();
+	newSidebarItem($('#playlist_<%= @playlist.id %>'));			// Register the new playlist in the view
+	
+	$.noticeAdd({ text: "<%= escape_javascript("#{t(:playlist)} '#{@playlist.name}' #{t(:created)}.") %>", stayTime: 6000 });
+<% else %>
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @playlist)) %>", stay: true });
+<% end %>

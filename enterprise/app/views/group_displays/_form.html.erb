@@ -1,0 +1,26 @@
+<%= form_for(@groupdisplay) do |f| %>
+	
+	<p>
+		<label>Select Group: </label><br />
+		<div class="ui-widget">
+			<%= f.select(:group_id, [[current_parent.description, current_parent.id]]) %>
+		</div>
+	</p>
+	
+	<% if (current_user.system_admin || current_permissions.admin?) && current_parent.children.exists? %>
+		<p>
+			<label>Select Sub-Group: </label><br />
+			<div class="ui-widget" style="min-width:10em;">
+				<% if current_parent == current_group %>
+					<%= f.select(:subgroup_id, [['', '']]) %>
+				<% else %>
+					<%= f.select(:subgroup_id, [[current_group.description, current_group.id]]) %>
+				<% end %>
+			</div>
+		</p>
+	<% end %>
+
+	<%= f.hidden_field :display_id %>
+
+	
+<% end %>

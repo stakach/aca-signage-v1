@@ -1,0 +1,20 @@
+
+<h1 class="editable"><%= converter.description %></h1>
+<p class="editable">
+	<%= t(:converters_edit_command) %>: <%= converter.command %>
+</p>
+
+<table>
+	<tr>
+		<td class="desc"><%= t(:converters_edit_applies) %>:</td>
+		<td class="editable"><%= converter.applies_to %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:converters_edit_converts) %>:</td>
+		<td class="editable"><%= converter.accepts_file.mime %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:converters_edit_enabled) %>:</td>
+		<td class="editable"><%= converter.enabled %></td>
+	</tr>
+</table>

@@ -1,0 +1,29 @@
+<%
+	result = @media.workflow_state.to_sym
+	if [:error, :invalid].include?(result)
+%>
+
+	$.noticeAdd({ text: "<%= escape_javascript(@media.name) %> <%= t(:media_conversion_error).html_safe %>", stay: true });
+	$('#media_<%= @media.id %>').replaceWith('<%= escape_javascript(render('row', :media => @media))%>');
+	$('#media_<%= @media.id %> td.time-entry').humaneDates();
+	
+<% elsif ![:converting, :checking].include?(result) %>
+	
+	$.noticeAdd({ text: "<%= escape_javascript(@media.name) %> <%= t(:media_conversion_complete) %>.", stayTime: 6000 });
+	$('#media_<%= @media.id %>').replaceWith('<%= escape_javascript(render('row', :media => @media))%>');
+	$('#media_<%= @media.id %> td.time-entry').humaneDates();
+	
+<% else %>
+
+	var meditem = $('#media_<%= @media.id %>');
+	meditem.children('.state').html('<%= @media.state %>');
+	meditem.children('.file-type').html('<%= @media.type %>');
+	if(meditem.hasClass('context-menu-selection')) {
+		meditem.removeClass();
+		meditem.addClass('media<%= is_transcoding(@media) %> context-menu-selection');
+	} else {
+		meditem.removeClass();
+		meditem.addClass('media<%= is_transcoding(@media) %>');
+	}
+	
+<% end %>

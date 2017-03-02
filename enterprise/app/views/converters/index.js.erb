@@ -1,0 +1,6 @@
+
+$('table.converters tbody').append(
+<% @converters.each do |converter| %>
+	"<%= escape_javascript(render('row', :converter => converter))%>" + 
+<% end %>
+"");

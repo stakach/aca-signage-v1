@@ -1,0 +1,8 @@
+
+<td class='sortable' width="16px"><span class="ui-icon ui-icon-arrowthick-2-n-s">.</span></td>
+<td class='description'><%= converter.description %></td>
+<td class='applies'><%= converter.applies_to %></td>
+<td class='convert'><%= converter.accepts_file.mime %></td>
+<td class='command'><%= truncate(converter.command, :length => 40) %></td>
+<td class='enabled'><%= converter.enabled %></td>
+<td class='time-entry' title="<%= converter.created_at.utc.iso8601 %>"></td>

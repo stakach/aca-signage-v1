@@ -1,0 +1,6 @@
+
+$('table.medias tbody').append(
+<% @medias.each do |media| %>
+	"<%= escape_javascript(render('row', :media => media))%>" + 
+<% end %>
+"");

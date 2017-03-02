@@ -1,0 +1,14 @@
+
+<% if @saved %>
+
+	<%= render :template => 'converters/show' %>
+	$.noticeAdd({ text: "<%= "#{t(:converter)} #{t(:update_success)}" %>.", stayTime: 6000 });
+	$('#converter_<%= @converter.id %>').replaceWith('<%= escape_javascript(render('converters/row', :converter => @converter))%>');
+	$('#converter_<%= @converter.id %>').addClass('context-menu-selection');
+	$('#converter_<%= @converter.id %> td.time-entry').humaneDates();
+
+<% else %>
+
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @converter)) %>", stay: true });
+
+<% end %>

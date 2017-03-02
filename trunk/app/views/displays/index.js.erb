@@ -1,0 +1,6 @@
+
+$('table.displays tbody').append(
+<% @displays.each do |display| %>
+	"<%= escape_javascript(render('row', :display => display))%>" + 
+<% end %>
+"");

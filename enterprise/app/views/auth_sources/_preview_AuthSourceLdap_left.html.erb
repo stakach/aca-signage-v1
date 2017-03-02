@@ -1,0 +1,24 @@
+
+<h1 class="editable"><%= auth_source.name %></h1>
+<p class="editable">
+	<%= t(:auth_sources_edit_dn) %>: <%= auth_source.base_dn %>
+</p>
+
+<table>
+	<tr>
+		<td class="desc"><%= t(:auth_sources_edit_host) %>:</td>
+		<td class="editable"><%= auth_source.host %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:auth_sources_edit_port) %>:</td>
+		<td class="editable"><%= auth_source.port %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:auth_sources_edit_secured) %>:</td>
+		<td class="editable"><%= auth_source.tls %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:auth_sources_edit_account) %>:</td>
+		<td class="editable"><%= auth_source.account %></td>
+	</tr>
+</table>

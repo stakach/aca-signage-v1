@@ -1,0 +1,9 @@
+
+<% if !@schedule.new_record? %>
+	$('#calendar').fullCalendar('refetchEvents');
+	$('#dialog').dialog("close");
+	
+	$.noticeAdd({ text: "<%= escape_javascript("#{t(:schedule_added)} '#{@schedule.playlist.name}' #{t(:added)}.") %>", stayTime: 6000 });
+<% else %>
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @schedule)) %>", stay: true });
+<% end %>

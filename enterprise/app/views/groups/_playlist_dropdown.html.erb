@@ -1,0 +1,3 @@
+
+<%= f.label :playlist_id, t(:groups_default_playlist) %><%= mark_required(@group, :playlist) %>
+<%= f.collection_select(:playlist_id, getPlaylists.collect, :id, :name, {:include_blank => true}) %>

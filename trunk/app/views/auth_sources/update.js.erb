@@ -1,0 +1,15 @@
+
+<% if @saved %>
+
+	$('#footer-data-wrapper').html('<div id="footer-left-wrapper"><div id="footer-left"></div></div><div id="footer-right-wrapper"><div id="footer-right"></div></div>');
+	<%= render :template => 'auth_sources/show' %>
+	$.noticeAdd({ text: "<%= "#{t(:auth_source).capitalize} #{t(:update_success)}" %>", stayTime: 6000 });
+	$('#auth_source_<%= @auth_source.id %>').replaceWith('<%= escape_javascript(render('auth_sources/row', :auth_source => @auth_source))%>');
+	$('#auth_source_<%= @auth_source.id %>').addClass('context-menu-selection');
+	$('#auth_source_<%= @auth_source.id %> td.time-entry').humaneDates();
+
+<% else %>
+
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @auth_source)) %>", stay: true });
+
+<% end %>

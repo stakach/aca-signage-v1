@@ -1,0 +1,21 @@
+
+
+$('#dialog').html('<%= escape_javascript(render('feedback'))%>');
+$('#dialog').dialog({
+	modal: true,
+	title: '<%= t(:feedback_form) %>',
+	buttons: {
+		'<%= t(:submit) %>': function() {
+			$.ajax({
+				type: "POST",
+				dataType: 'script',
+				url: $('#dialog form').attr('action'),
+				data: $('#dialog form').serialize(),
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, '<%= t(:feedback_form_fail) %>', errorThrown);
+				}
+			});
+		}
+	}
+});
+

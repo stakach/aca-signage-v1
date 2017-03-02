@@ -1,0 +1,14 @@
+
+$('#footer-left').html('<%= escape_javascript(render('users/preview_left', :user => @user))%>');
+$preview.html('<%= escape_javascript(image_tag('footer/users.png', :alt => @user.identifier, :title => @user.identifier)) %>');
+scalePreview();
+
+$('#footer-left .editable').click(function(){
+	$.ajax({
+		type: "GET", url: '<%= edit_user_path(@user.id) %>',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, '<%= "#{t(:user)} #{t(:edit_failed)}" %>', errorThrown);
+		}
+	});
+});

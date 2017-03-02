@@ -1,0 +1,42 @@
+.notice-wrap {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	width: 250px;
+	z-index: 9999;
+	
+	font-size: 			12px;
+	font-family: 			Tahoma, Arial, Helvetica, sans-serif;
+}
+
+* html .notice-wrap {
+	position: absolute;		
+}
+ 
+.notice-item {
+	min-height: 40px;
+	text-align: 			left;
+		
+	background: #000;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;	/*CSS 3 Element*/
+	color: #fff;
+	
+	opacity: .85;
+	
+	padding: 12px 28px 12px 10px;
+	
+	display: block;
+	position: relative;
+	margin: 0 0 12px 0;
+}
+
+.notice-item-close {
+	position: absolute;
+	font-size: 	11px;
+	font-weight: bold;
+	right: 12px;
+	top: 8px;
+	cursor: pointer;
+}

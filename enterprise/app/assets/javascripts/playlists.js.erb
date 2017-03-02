@@ -1,0 +1,236 @@
+//= require application
+//= require colorpicker
+//= require player/signage.elements
+
+
+
+function doEdit() {
+	var selected = $('.context-menu-selection');
+	var data = new Array();
+	
+	$.each(selected, function(index, val) {	// Get all the selected ids into an array
+		data.push(get_id($(val)));
+	});
+
+	$.ajax({
+		type: "GET",
+		url: '/' + pageLanguage + '/playitems/' + data[0] + '/edit',
+		data: {
+			'items': data
+		},
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, lang_item_edit_fail, errorThrown);
+		}
+	});
+}
+
+
+//
+// Add menu items
+//
+menuBindings['edit-playitem'] = function(t) {
+	doEdit();
+};
+
+
+$(function() {
+
+
+	//
+	// Show appropriate preview
+	//
+	customPreview = function() {
+		var len = $('.context-menu-selection').length;
+		if (len == 0) {
+			$.ajax({
+				dataType: 'script',
+				url: window.location.pathname + '/footer'
+			});
+		}
+		else if (len == 1) {
+			var id = get_id($('.context-menu-selection'));
+			// ajax down the preview for the current selected item
+			$.ajax({
+				dataType: 'script',
+				url: '/' + pageLanguage + '/playitems/' + id
+			});
+		}
+
+		enablePlay(); // Play always enabled in playlist mode (previews the playlist)
+	};
+	enablePlay();
+
+	jQuery.preLoadImages('<%= asset_path 'footer/unknown.png' %>');
+
+
+	//
+	// Enable droppable for this view ---------------------
+	//
+	dropDetected = function(playlist, object_ids) {
+		var thebuttons = {};
+		thebuttons[lang_copy] = function() {
+			$.ajax({
+				type: "POST", url: '/playitems/copy',
+				data: {
+					'items': object_ids,
+					'playlist': playlist
+				},
+				dataType: "script",
+				success: function(data, textStatus, xhr) {
+					$('#dialog').dialog('close');
+
+					$.noticeAdd({ text: object_ids.length + " " + lang_item_copy_success, stayTime: 6000 });
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, lang_item_copy_error, errorThrown);
+				}
+			});
+		};
+		thebuttons[lang_move] = function() {
+			$.ajax({
+				type: "POST", url: '/playitems/move',
+				data: {
+					'_method': 'put',
+					'items': object_ids,
+					'playlist': playlist
+				},
+				dataType: "script",
+				success: function(data, textStatus, xhr) {
+					$('#dialog').dialog('close');
+
+					$.each(object_ids, function(index, val) {
+						$('#playitem_' + val).fadeOut("slow", function() {
+							$('#playitem_' + val).remove();
+
+							$('.context-menu-selection').removeClass('context-menu-selection');
+							defaultPreview(); 	// Update the preview
+							customPreview();
+						});
+					});
+
+					$.noticeAdd({ text: object_ids.length + " " + lang_item_move_success, stayTime: 6000 });
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, lang_item_move_error, errorThrown);
+				}
+			});
+		};
+		
+		$('#dialog').html('<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Moving the selected items will remove them from this playlist.').dialog({
+			resizable: false,
+			modal: true,
+			title: 'Move or Copy?',
+			buttons: thebuttons
+		});
+	}
+
+
+	newSidebarItem = function($object) {	//	Same as medias.js
+		if ($object.hasClass('playlist-drop'))
+			$object.makeDroppable();
+	}
+
+
+	//
+	// must not be able to drop on self!!
+	//
+	$('.playlist-drop').makeDroppable().droppable("option", "accept", 'tr.playitem > *');
+	var current_id = window.location.pathname.match(/\/\d+/);
+	current_id = current_id[current_id.length - 1].replace('/', '');
+	$('#playlist_' + current_id).droppable("destroy");
+
+
+
+	//
+	// Deleting Items
+	//
+	deleteItems = function(object_ids) {
+		$.ajax({
+			type: "POST", url: '/playitems/destroy',
+			data: {
+				'_method': 'delete',
+				'items': object_ids
+			},
+			dataType: "script",
+			success: function(data, textStatus, xhr) {
+
+				$.each(object_ids, function(index, val) {
+					$('#playitem_' + val).fadeOut("slow", function() {
+						$('#playitem_' + val).remove();
+						
+						// listLengthChanged(1);
+						listLength -= 1;
+
+						$('.context-menu-selection').removeClass('context-menu-selection');
+						
+						if (index == object_ids.length - 1) {
+							defaultPreview(); 	// Update the preview
+							customPreview();
+						}
+					});
+				});
+
+				$.noticeAdd({ text: object_ids.length + " " + lang_item_delete_success, stayTime: 6000 });
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				error_notice(xhr, lang_item_delete_failed, errorThrown);
+			}
+		});
+	};
+
+	//
+	// Sortable items
+	//
+	$('table.playitems tbody').sortable({
+		items: 'tr',
+		handle: '.sortable',
+		axis: 'y',
+		forceHelperSize: true,
+		containment: '#right',
+		tolerance: 'pointer',
+		sort: function(event, ui) {
+			ui.helper.children(':not(td.sortable, td.name, td.sortable > *, td.name > *)').hide();
+		},
+		stop: function(event, ui) {
+			ui.item.children().show();
+		},
+		update: function(event, ui) {
+			var order = $(this).sortable('serialize');
+			order = "_method=put&" + order;
+			$.ajax({
+				type: "POST", url: '/playitems/order',
+				data: order,
+				dataType: "script",
+				success: function(data, textStatus, xhr) {
+					$.noticeAdd({ text: lang_item_sort_success, stayTime: 6000 });
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, lang_item_sort_failed, errorThrown);
+				}
+			});
+		}
+	});
+
+
+	//
+	// Preview button clicked
+	//
+	previewButton = function() {
+		var date = new Date();
+		window.open(window.location.pathname + '/preview.html?' + date.getTime(), "_blank", "toolbar=false,location=yes,status=no,directories=no,menubar=no,scrollbars=no,resizable=yes,width=800,height=600");
+	};
+	
+	
+	//
+	// Data load
+	//
+	searchCompleted = function() {
+		var item;
+		$('tr.playitem td.transition').each(function(index, el){
+			item = $(this).data('effect');
+			$(this).text(EFFECTS[item]);
+		});
+	};
+	searchCompleted();
+});

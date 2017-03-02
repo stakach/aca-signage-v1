@@ -1,0 +1,20 @@
+
+$('#footer-right').html('<%= escape_javascript(render('playlists/preview_right', :playlist => @playlist))%>');
+$('#footer-left').append('<%= escape_javascript(render('playlists/preview_left', :playlist => @playlist))%>');
+$preview.html('<%= escape_javascript(image_tag('footer/playlist.png', :alt => @playlist.name, :title => @playlist.name)) %>');
+scalePreview();
+
+{
+	var el = $('#playlists_default_transition');
+	el.text(EFFECTS[el.data('current')]);
+}
+
+$('#footer-left .editable').click(function(){
+	$.ajax({
+		type: "GET", url: '<%= edit_playlist_path(@playlist.id) %>',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, '<%= "#{t(:playlist)} #{t(:edit_failed)}" %>', errorThrown);
+		}
+	});
+});

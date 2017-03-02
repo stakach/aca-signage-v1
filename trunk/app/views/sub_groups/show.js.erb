@@ -1,0 +1,15 @@
+
+$('#footer-right').html('<%= escape_javascript(render('preview_right', :group => @subgroup))%>');
+$('#footer-left').html('<%= escape_javascript(render('preview_left', :group => @subgroup))%>');
+$preview.html('<%= escape_javascript(image_tag('footer/sub_groups.png', :alt => @subgroup.description, :title => @subgroup.description)) %>');
+scalePreview();
+
+$('#footer-left .editable').click(function(){
+	$.ajax({
+		type: "GET", url: '<%= edit_sub_group_path(@subgroup.id) %>',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, '<%= "Group #{t(:edit_failed)}" %>', errorThrown);
+		}
+	});
+});

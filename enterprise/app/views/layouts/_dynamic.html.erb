@@ -1,0 +1,32 @@
+<div id="dynamics">
+	<%= yield :dynamic %>
+	
+	<div id="delete-dialog">
+		<%= t(:confirm_delete) %> <em></em> <%= t(:selected_items) %>?
+	</div>
+	
+	<div id="dialog">
+	</div>
+	
+	<div class="contextMenu" id="objectMenu">
+		<ul>
+			<%= yield :contextmenu %>
+			<li id="delete"><%= image_tag('led-icons/page_white_delete.png', :alt => t(:delete), :title => t(:delete)) %> <%= t(:delete) %></li>
+		</ul>
+	</div>
+	
+	<div id="feedback-text">
+		<%= t(:feedback_line) %> <%= link_to t(:feedback), new_monitor_path, :remote => true %> <span>r464</span>
+	</div>
+	
+	<ul class="pagelinks">
+		<li>
+			<ul class="playlists">
+				
+			</ul>
+		</li>
+	</ul>
+	
+	<div id="preview-staging">
+	</div>
+</div>

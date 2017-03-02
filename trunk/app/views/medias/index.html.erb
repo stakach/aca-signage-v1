@@ -1,0 +1,44 @@
+
+<table class="list medias">
+	<thead><tr>
+		<th data-dbcol="name" class="orderable"><%= t(:media_edit_name) %></th>
+		<th data-dbcol="comment" class="orderable"><%= t(:media_edit_comment) %></th>
+		<th data-dbcol="workflow_state" class="orderable"><%= t(:media_edit_state) %></th>
+		<th data-dbcol="media_type" class="orderable"><%= t(:media_edit_type) %></th>
+		<th data-dbcol="created_at" class="orderable ordered desc"><%= t(:added).capitalize %></th>
+		<th></th>
+	</tr></thead>
+	<tbody>
+		
+	</tbody>
+</table>
+
+
+<%= content_for :dynamic do %>
+	
+	
+<% end %>
+
+<%= content_for :contextmenu do %>
+	<li id="edit-media">
+		<%= image_tag('led-icons/textfield_rename.png', :alt => t(:edit), :title => t(:edit)) %> <%= t(:edit) %>
+	</li>
+	<li id="retry-error">
+		<%= image_tag('led-icons/arrow_refresh.png', :alt => t(:media_do_retry), :title => t(:media_do_retry)) %> <%= t(:media_retry_word) %>
+	</li>
+<% end %>
+
+
+<%= content_for :preview do %>
+	<%= image_tag('footer/folder.png', :alt => t(:preview)) %>
+<% end %>
+
+
+<%= content_for :script do %>
+
+	<%= javascript_include_tag "jquery.html5_upload" %>
+	<%= javascript_include_tag "locales/#{I18n.locale}/medias-#{I18n.locale}" %>
+	<%= javascript_include_tag "medias" %>
+
+<% end %>
+

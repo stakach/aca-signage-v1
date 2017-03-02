@@ -1,0 +1,16 @@
+
+<li id="group_<%= group.id %>" class="group-drop">
+	<span class="selection<%= ' selected' if @group && @groups && @group.id == group.id %>">
+		<%= link_to image_tag('led-icons/calendar_2.png', :alt => t(:group)) + " " + group.name, group_path(group.id), :title => group.comment %>
+		<span class='options'>
+			<%= link_to image_tag('led-icons/bin_closed.png', :alt => "#{t(:remove)} #{t(:group)}", :title => "#{t(:remove)} #{t(:group)}"), group_path(group.id), :data => {:confirm => "#{t(:really_delete)} #{t(:group)}?"}, :method => :delete %>
+		</span>
+	</span>
+	<% if group.playlists.count > 0 %>
+		<ul class="playlists">
+			<% group.playlists.each do |playlist| %>
+				<%= render('layouts/content/playlist', :playlist => playlist) %>
+			<% end %>
+		</ul>
+	<% end %>
+</li>

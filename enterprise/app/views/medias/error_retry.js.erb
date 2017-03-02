@@ -1,0 +1,7 @@
+$('#media_<%= @media.id %>').replaceWith('<%= escape_javascript(render('row', :media => @media))%>');
+$('#media_<%= @media.id %> td.time-entry').humaneDates();
+$.noticeAdd({ text: "<%= t(:media_retry) %>.", stayTime: 6000 });
+if (!checkRunning) {
+	checkRunning = true;
+	window.setTimeout("check_transcoding();", 5000); // As the search would have just updated the status we can wait before checking again
+}

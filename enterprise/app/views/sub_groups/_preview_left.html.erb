@@ -1,0 +1,18 @@
+
+<h1 class="editable"><%= group.description %></h1>
+<%= simple_format(group.notes, :class => 'editable') %>
+
+<table>
+	<tr>
+		<td class="desc">Domain:</td>
+		<td class="editable"><%= group.domain %></td>
+	</tr>
+	<tr>
+		<td class="desc">LDAP object name:</td>
+		<td class="editable"><%= group.identifier %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:user_edit_timezone) %>:</td>
+		<td class="editable"><%= group.timezone %></td>
+	</tr>
+</table>

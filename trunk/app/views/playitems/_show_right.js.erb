@@ -1,0 +1,15 @@
+$('#footer-right').html('<%= escape_javascript(render('preview_right'))%>');
+$('#footer-right table tr').click(function(){
+	$.ajax({
+		type: "GET", url: '<%= edit_playitem_path(@playitem.id) %>',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, '<%= t(:edit_failed) %>', errorThrown);
+		}
+	});
+});
+
+{
+	var el = $('#playlist_media_transition_effect');
+	el.text(EFFECTS[el.data('current')]);
+}

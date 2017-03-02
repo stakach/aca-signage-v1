@@ -1,0 +1,43 @@
+
+<table class="list converters">
+	<thead><tr>
+		<th class="ordered asc"></th>
+		<th><%= t(:converters_edit_description) %></th>
+		<th><%= t(:converters_edit_applies) %></th>
+		<th><%= t(:converters_edit_converts) %></th>
+		<th><%= t(:converters_edit_command) %></th>
+		<th><%= t(:converters_edit_enabled) %></th>
+		<th><%= t(:added).capitalize %></th>
+	</tr></thead>
+	<tbody>
+		
+	</tbody>
+</table>
+
+
+<%= content_for :dynamic do %>
+	
+	
+<% end %>
+
+
+
+<%= content_for :contextmenu do %>
+	<li id="edit-converter">
+		<%= image_tag('led-icons/textfield_rename.png', :alt => t(:edit), :title => t(:edit)) %> <%= t(:edit) %>
+	</li>
+<% end %>
+
+
+<%= content_for :preview do %>
+	<%= image_tag('footer/converters.png', :alt => t(:converters)) %>
+<% end %>
+
+
+<%= content_for :script do %>
+
+	<%= javascript_include_tag "locales/#{I18n.locale}/converters-#{I18n.locale}" %>
+	<%= javascript_include_tag "converters" %>
+
+<% end %>
+

@@ -1,0 +1,15 @@
+CACHE MANIFEST
+
+# <%= @display.last_updated.to_s(:rfc822) %>
+
+CACHE:
+<%= gen_display_link(@display)[0] + '.json' %>
+<%= asset_path('player/signage.js') %>
+<%= asset_path("player/signage.worker.js") %>
+<%= asset_path("player/signage.worker.emulator.js") %>
+<%= asset_path('player/transitions.css') %>
+/icon.png
+
+
+NETWORK:
+*

@@ -1,0 +1,163 @@
+//= require jquery
+//= require jquery.scale
+//= require player/signage.constants
+//= require player/signage.elements
+//= require player/signage.effects
+//= require player/signage.player.video
+//= require player/signage.player.audio
+//= require player/signage.display.manager
+
+
+
+(function( $, global ){
+	
+	
+	$(function() {
+	
+		var videoDownloader,							// Manage the downloading of playlists
+			audioDownloader,
+			displayManager,								// Manages display settings
+			audioPlayer, // = new AudioPlayer(),			// The playback of audio elements
+			videoPlayer = new VideoPlayer(audioPlayer),	// The playback of visual elements
+			codecs = { // Chart from jPlayer
+				oga: { // OGG
+					codec: 'audio/ogg; codecs="vorbis"',
+					media: 'audio'
+				},
+				m4a: { // AAC / MP4
+					codec: 'audio/mp4; codecs="mp4a.40.2"',
+					media: 'audio'
+				},
+				webm: { // WEBM
+					codec: 'video/webm; codecs="vorbis, vp8"',
+					media: 'video'
+				},
+				mp4: { // H.264 / MP4
+					codec: 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
+					media: 'video'
+				}
+			};
+			
+			
+		//
+		// Check which elements are supported
+		//
+		function checkSupport() {
+			var	dummyAudio = $('<audio/>'),
+				dummyVideo = $('<video/>'),
+				i;
+			
+			$.extend($.support, {
+				image: true,
+				audio: !!dummyAudio[0].canPlayType,
+				video: !!dummyVideo[0].canPlayType,
+				geoloc: !!navigator.geolocation,
+				cache: !!window.applicationCache && (window.applicationCache.status != window.applicationCache.UNCACHED),
+				
+				fs: !!window.File && !!window.FileReader && !!window.FileList && !!window.Blob,
+		
+				mediaTypes: {},
+			});
+			
+			
+			//
+			// Transition support
+			//
+			$.support['transitions'] = (function( style ){
+				if( typeof style['transition'] !== 'undefined')
+					return true;
+				var prefixes = ['Webkit','Moz','Ms','O'];
+				for( var i=0, l=prefixes.length; i < l; i++ ) {
+					if( typeof style[prefixes[i] + 'Transition'] !== 'undefined') {
+						return true;
+					}
+				}
+				return false;
+			})( $('#fader')[0].style );
+			
+			
+			//
+			// Video and Audio support
+			//
+			for (i in codecs){
+				if (codecs.hasOwnProperty(i)){
+					if (codecs[i].media === 'video'){
+						codecs[i].supported = dummyVideo[0].canPlayType(codecs[i].codec);
+						if(codecs[i].supported)
+							$.support.mediaTypes[i] = codecs[i];
+					} else if (codecs[i].media === 'audio'){
+						codecs[i].supported = dummyAudio[0].canPlayType(codecs[i].codec);
+						if(codecs[i].supported)
+							$.support.mediaTypes[i] = codecs[i];
+					}
+				}
+			}
+			
+			dummyAudio.remove();
+			dummyVideo.remove();
+			
+			//
+			// Image support
+			//
+			$.support.mediaTypes.jpeg = {
+				codec: 'image/jpeg',
+				media: 'image'
+			};
+			$.support.mediaTypes.gif = {
+				codec: 'image/gif',
+				media: 'image'
+			};
+			$.support.mediaTypes.png = {
+				codec: 'image/png',
+				media: 'image'
+			};
+		}
+			
+		
+		function downloadersReady() {
+			//
+			// Provide the downloader with initialisation settings
+			//	URL for the JSON feed + supported media types
+			//
+			videoDownloader.postMessage({
+				message: SIG.supports,
+				support: $.support
+			});
+			displayManager = new DisplayManager(videoDownloader, videoPlayer, audioDownloader, audioPlayer);
+		}
+		
+		
+		codecs.ogg = codecs.oga;	// Any ogg file will be audio only in our system
+		codecs.aac = codecs.m4a;
+		checkSupport();			// What files do we support?
+		
+		
+		//
+		// Ready the download managers
+		//
+		if(!!window.Worker) {
+			videoDownloader = new Worker('<%= asset_path("player/signage.worker.js") %>');
+			videoDownloader.onmessage = videoPlayer.downloaderMessage;
+			//audioDownloader = new Worker('signage.worker.js');
+			//audioDownloader.onmessage = audioPlayer.downloaderMessage;
+			downloadersReady();
+		} else {
+			$.getScript('<%= asset_path("player/signage.worker.emulator.js") %>', function() {		// TODO:: Have an alternative dlMan that contains the WorkerEmulator using rails asset pipeline
+				videoDownloader = new WorkerEmulator(videoPlayer.downloaderMessage);
+				//audioDownloader = new WorkerEmulator(audioPlayer.downloaderMessage);
+				downloadersReady();
+			});
+		}
+		
+		
+		$(window).bind('resize', function(){
+			
+			$('article > div > img').scale("stretch", "vert");
+			
+			
+		});
+	
+	});
+	
+})(jQuery, this);
+

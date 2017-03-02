@@ -1,0 +1,32 @@
+
+<%= form_for(@playitem, {:url => playitem_path(@playitem.id), :remote => true, :method => :put}) do |f| %>
+
+	<% if @items.length > 1 %>
+		<p><b><%= t(:playitem_note) %>:</b> <u><%= t(:playitem_multiple_timeouts) %></u></p>
+		<%= hidden_field(:item, :ids, {:value => @items.join(",")}) %>
+	<% end %>
+
+	<table class="small-edit">
+		<tr>
+			<td class="desc">Run time:</td>
+			<td>
+				<%= f.label :hours, t(:playitem_hours) %><%= f.text_field :hours %>
+				<%= f.label :minutes, t(:playitem_min) %><%= f.text_field :minutes %>
+				<%= f.label :seconds, t(:playitem_sec) %><%= f.text_field :seconds %>
+			</td>
+		</tr>
+		<tr>
+			<td class="desc">Transition:</td>
+			<td>
+				<%= f.select :transition_effect, [], {:include_blank => true}, { :data => {:current => @playitem.transition_effect} } %>
+			</td>
+		</tr>
+	</table>
+	
+	<div class="edit-save">
+		<%= f.submit t(:update) %>
+	</div>
+<% end %>
+
+<%= render 'shared/edit_cancel' %>
+

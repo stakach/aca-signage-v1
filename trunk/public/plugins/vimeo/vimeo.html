@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vimeo Player</title>
+	<style type="text/css">
+		html, body {
+			margin:0px;
+			padding:0px;
+			overflow: hidden;
+		}
+		
+		#player, html, body, iframe {
+			height:100%;
+			width:100%;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="player"></div>
+	<script>
+		var parentWindow = null,
+			playerWindow = null,
+					
+			playerReadyVar = null,
+			playASAP = false,
+			
+			videoId = null,
+			url,
+			useControls = null,
+			
+			options = null,
+			connectivity = ('onLine' in window.navigator);
+	
+	
+		//
+		// Communication functions for the signage plugin API
+		//
+		if (window.addEventListener){
+			window.addEventListener('message', receiveMessage, false);
+		}
+		else {
+			window.attachEvent('onmessage', receiveMessage, false);
+		}
+		function receiveMessage(event) {
+			var data = event.data
+			
+			if(typeof data == "string")
+				data = JSON.parse(event.data);
+			
+			if(parentWindow == null || event.source == parentWindow) {
+				
+				//
+				// Parent Window
+				//
+				switch(data['message']){
+					case 0: 		// PLUGIN.hello == 0
+						parentWindow = event.source;
+						
+						if(connectivity) {
+							if(!navigator.onLine) {
+								parentWindow.postMessage({message: 3, reason: 'No connectivity'}, '*');	// ELEMENT.error == 3
+								break;	// We won't be loading youtube
+							}
+						}
+						
+						options = data['options'];
+						loadVimeo(data['params']);
+						break;
+					case 1: 		// PLUGIN.play == 1
+						if(!!!options || !!!options['ignore_play']) {
+							if(playerReadyVar == null)
+								playASAP = true;
+							else
+								playerWindow.postMessage(JSON.stringify({method: 'play'}), url);
+						}
+						break;
+					case 2: 		// PLUGIN.stop == 2
+						playASAP = false;
+						if(playerReadyVar != null)
+							playerWindow.postMessage(JSON.stringify({method: 'pause'}), url);
+						break;
+				}
+				
+			} else {
+				//
+				// Viemo player
+				//
+				switch (data.event) {
+					case 'ready':
+						playerWindow = event.source;
+						
+						playerWindow.postMessage(JSON.stringify({method: 'addEventListener', value: 'pause'}), url);
+						playerWindow.postMessage(JSON.stringify({method: 'addEventListener', value: 'finish'}), url);
+						playerWindow.postMessage(JSON.stringify({method: 'addEventListener', value: 'loadProgress'}), url);
+						
+						playerReadyVar = true;
+						
+						if(playASAP)
+							playerWindow.postMessage(JSON.stringify({method: 'play'}), url);
+						
+						parentWindow.postMessage({message: 0}, '*');			// ELEMENT.ready == 0
+						break;
+					case 'pause':
+						parentWindow.postMessage({message: 2}, '*');	// ELEMENT.ended == 2
+						break;
+					case 'finish':
+						parentWindow.postMessage({message: 2}, '*');	// ELEMENT.ended == 2
+						break;
+					case 'loadProgress':
+						if(data.data['percent'] == 1)
+							parentWindow.postMessage({message: 1}, '*');			// ELEMENT.loaded == 1
+				}
+				
+			}
+		}
+		
+		
+		function loadVimeo(params) {
+			//
+			// This code loads the IFrame Player API code asynchronously.
+			videoId = params;
+			if(!!options['controls'])
+				useControls = 1;
+			else
+				useControls = 0;
+				
+			url = "http://player.vimeo.com/video/" + videoId;
+			
+			var tag = document.createElement('iframe');
+			tag.src = url + "?api=1&portrait=0&byline=0&title=0&autoplay=0&loop=0";
+			tag.frameBorder = "0";
+			tag.width = "100%";
+			tag.height = "100%";
+			
+			var containerTag = document.getElementsByTagName('div')[0];
+			containerTag.appendChild(tag);
+		}
+    </script>
+
+</body>
+</html>

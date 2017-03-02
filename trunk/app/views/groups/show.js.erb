@@ -1,0 +1,6 @@
+
+$('table.displays tbody').append(
+<% @groupdisplays.each do |groupitem| %>
+	"<%= escape_javascript(render('row', :groupitem => groupitem))%>" + 
+<% end %>
+"");

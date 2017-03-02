@@ -1,0 +1,41 @@
+<%= form_for(@invite, {:url => users_path, :remote => true, :method => :post}) do |f| %>
+
+	<p>
+		<%= f.label :email %><%= mark_required(@invite, :email) %><br />
+		<%= f.text_field :email %>
+	</p>
+	<p>
+		<%= f.label :message %><%= mark_required(@invite, :message) %><br />
+		<%= f.text_area :message %>
+	</p>
+	
+	<p>
+		<table>
+			<tr>
+				<td><%= f.check_box :display_alerts %></td>
+				<td><%= f.label :display_alerts, 'Recieve alerts' %></td>
+			</tr>
+			<tr>
+				<td><%= f.check_box :publisher %></td>
+				<td><%= f.label :publisher, 'Can Publish' %></td>
+			</tr>
+			<tr>
+				<td><%= f.check_box :admin %></td>
+				<td><%= f.label :admin, 'Administrator' %></td>
+			</tr>
+			<% if current_permissions.group_manager || current_permissions.domain_manager %>
+				<tr>
+					<td><%= f.check_box :group_manager %></td>
+					<td><%= f.label :group_manager %></td>
+				</tr>
+				<% if current_permissions.domain_manager %>
+					<tr>
+						<td><%= f.check_box :domain_manager %></td>
+						<td><%= f.label :domain_manager %></td>
+					</tr>
+				<% end %>
+			<% end %>
+		</table>
+	</p>
+
+<% end %>

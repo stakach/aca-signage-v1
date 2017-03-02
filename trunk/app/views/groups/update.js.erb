@@ -1,0 +1,15 @@
+<% if @saved %>
+
+	var len = $('.context-menu-selection').length;
+	if (len == 0) {	// Check len as this may be a default playlist update with a display selected
+		$('#group_prev_left').remove();
+		<%= render :template => 'groups/footer' %>
+		$('#group_<%= @group.id %>').replaceWith('<%= escape_javascript(render('layouts/content/display_group', :group => @group))%>');
+	}
+	$.noticeAdd({ text: "<%= "#{t(:group)} #{t(:update_success)}" %>.", stayTime: 6000 });
+
+<% else %>
+
+	error_notice({}, '<%= "#{t(:group)} #{t(:edit_failed)}" %>', 'error');
+
+<% end %>

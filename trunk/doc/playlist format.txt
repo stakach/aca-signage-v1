@@ -1,0 +1,94 @@
+{
+	"forward_back":false,
+	"geolocate":false,
+	"last_updated":"2012-07-13T00:38:31Z",
+	"max_space":0,
+	"physical":true,
+	"live_playlists":[{
+		"default_timeout":30,
+		"id":3,
+		"random":false,				// Random means the items should be shuffled
+		"published_medias":[{
+			"pub_ordinal":0,		// This is the playlist order (may not be served in order)
+			"pub_run_time":30,		// Default item run time for images and urls
+			"pub_start_time":null,		// Start time (if a video should not start at the begining)
+			"pub_transition_effect":0,	// The particular transition effect to use (can be ignored)
+			"media":{
+				"background":0,		// This indicates the background colour to use (PNG's with transparencies ect)
+				"file_path":"public/uploads/3/1341732291.JPG",			// The path of the asset - need to remove public
+				"id":53,
+				"interactive":null,						// Interactive means the user can interact with this element (preventing cycling while interaction is occuring)
+				"media_type":0,							// Media type: :unknown => -1, :image => 0, :video => 1, :audio => 2, :plugin => 10, :url => 11, :image_url => 12
+				"formats":[{
+					"file_path":"public/uploads/3/1341732291.JPG",		// URL's don't have formats. Audio / Video typically have multiple formats - no ordering
+					"accepts_file":{"mime":"image/jpeg"}
+				}]
+		},
+		{
+			"pub_ordinal":4,
+			"pub_run_time":null,
+			"pub_start_time":null,
+			"pub_transition_effect":3,
+			"media":{
+				"background":"000",
+				"file_path":"dDXusH0XX4s",		// This is a youtube plugin. The path here is the ID of the video
+				"id":41,
+				"interactive":null,
+				"media_type":10,
+				"formats":[],
+				"plugin":{				// There is no real way to detect plugin type as they are loaded based on the definition here
+					"can_play_to_end":true,
+					"file_path":"/plugins/youtube/youtube.html",
+					"requires_data":true
+				}
+			}
+		}]
+	},
+	{
+		"default_timeout":30,
+		"id":4,
+		"random":false,
+		"published_medias":[]
+	},
+	{
+		"default_timeout":30,
+		"id":1,
+		"random":false,
+		"published_medias":[{
+			"pub_ordinal":0,
+			"pub_run_time":5,
+			"pub_start_time":null,
+			"pub_transition_effect":0,
+			"media":{
+				"background":0,
+				"file_path":"public/uploads/3/1341791465.png",
+				"id":54,
+				"interactive":null,
+				"media_type":0,
+				"formats":[{
+					"file_path":"public/uploads/3/1341791465.png",
+					"accepts_file":{"mime":"image/png"}
+				}]
+			}
+		}]
+	}],
+	"display_groups":[{
+		"id":1,
+		"playlist_id":3		// Default Playlist (will be in the live playlists section)
+	},{
+		"id":1,
+		"playlist_id":1
+	}],
+	"live_schedules":[{
+		"do_end":"2012-07-26T01:59:00-12:00",			// Start and end times for scheduled content
+		"do_start":"2012-07-25T02:00:00-12:00",
+		"schedule":{
+			"created_at":"2012-07-25T19:05:46-12:00",	// This is used to provide playback ordering
+			"display_group_id":1,				// This links the schedule to the display group above
+			"emergency":false,
+			"exclusive":false,
+			"id":45,
+			"playlist_id":1					// This is the scheduled playlist (will be in the live playlists section)
+		}
+	}]
+}

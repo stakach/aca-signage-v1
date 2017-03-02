@@ -1,0 +1,14 @@
+
+<% if !@subgroup.new_record? %>
+	var item = $("<%= escape_javascript(render('row', :group => @subgroup))%>").prependTo('table.subgroups tbody');
+	$('#dialog').dialog("close");
+	$('#subgroup_<%= @subgroup.id %> td.time-entry').humaneDates();
+	
+	$.noticeAdd({ text: "<%= escape_javascript("Group '#{@subgroup.description}' #{t(:created)}.") %>", stayTime: 6000 });
+	
+	listLength += 1;
+	defaultPreview(); 	// Update the preview
+	customPreview();
+<% else %>
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @subgroup)) %>", stay: true });
+<% end %>

@@ -1,0 +1,354 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  edit: "Edit"
+  delete: "Delete"
+  new: "New"
+  update: "Update"
+  remove: "Remove"
+  cancel: "Cancel"
+  error: "error"
+  
+  create: "Create"
+  submit: "Submit"
+  
+  add: "Add"
+  added: "added"
+  created: "created"
+  update_success: "successfully updated"
+  edit_failed: "edit failed"
+  unable_to_create: "Unable to create"
+  unable_to_add: "Unable to add"
+  
+  say_yes: "Yes"
+  say_no: "No"
+  
+  #
+  # Email
+  #
+  email_feedback_from: "feedback from"
+  email_feedback_provided: "has provided some feedback"
+  email_display_warning: "Signage Display Warning"
+  
+  
+  
+  #
+  # Validation
+  #
+  invalid_link_error: 'invalid, requires full address: http://site.com/'
+  invalid_playlist_timeout: "can only be a whole number"
+  
+  
+  #
+  # Users
+  #
+  
+  user: "User"
+  users: "Users"
+  
+  user_edit_admin: "Admin"
+  user_edit_administrator: "Administrator"
+  user_edit_sysadmin: "System Admin"
+  user_edit_sysadministrator: "System Administrator"
+  user_edit_authentication: "Authenticated against"
+  user_edit_auth_select: "Select Authentication"
+  user_edit_email: "Manager Email"
+  user_edit_identifier: "Identifier"
+  user_edit_description: "Description"
+  user_edit_notes: "Notes"
+  user_edit_timezone: "Timezone"
+  
+  user_auth_type: "Authentication type"
+  
+  user_system: "System"
+  user_admin: "Admin"
+  
+  user_list_admins: "Are Admins"
+  
+  
+  #
+  # User Displays
+  #
+  udisplay_select: "Select User"
+  udisplay_shared: "Display shared with"
+  udisplay_share: "Share"
+  udisplay_share_error: "Unable to share display"
+  udisplay_no_users: "No users to share with"
+  
+  
+  #
+  # Schedules
+  #
+  schedule: "Schedule"
+  schedules: "Schedules"
+  
+  schedule_edit_all_day_event: "All Day Event"
+  schedule_edit_starts: "Starts"
+  schedule_edit_ends: "Ends"
+  schedule_edit_repeat: "Repeat?"
+  schedule_edit_endrepeat: "End repeat"
+  schedule_edit_exclusive: "Exclusive"
+  schedule_edit_emergency: "Emergency Override"
+  schedule_edit_notes: "Notes"
+  
+  schedule_added: "Schedule for playlist"
+  schedule_update_failed: "Unable to update schedule"
+  schedule_removed: "Schedule removed successfully"
+  schedule_remove_failed: "Unable to remove schedule"
+  schedule_add_failed: "Unable to add schedule"
+  
+  
+  #
+  # Playlists
+  #
+  playlist: "Playlist"
+  playlists: "Playlists"
+  
+  playlist_timeout: "Default Timeout"
+  
+  playlist_edit_name: "Name"
+  playlist_edit_comment: "Comment"
+  playlist_list_type: "Type"
+  playlist_edit_timeout: "Edit Timeout"
+  
+  playlist_deleted: "Playlist successfully deleted"
+  
+  publish: "Publish"
+  is_not_published: "Playlist is not published"
+  
+  playlist_not_scheduled: "Currently not displayed in any schedules"
+  playlist_displayed_in: "Displayed in"
+  
+  
+  #
+  # Playitems
+  #
+  playitems: "Items"
+  playitem: "Item"
+  playitem_multiple_timeouts: "Editing Multiple Items"
+  playitem_note: "Note"
+  playitem_hours: " H"
+  playitem_min: " M"
+  playitem_sec: " S"
+  playitem_runtime: "Run time"
+  playitem_multiple_update: "Multiple items updated"
+  playitem_update_failed: "Item update failed"
+  
+  
+  
+  
+  #
+  # Feedback
+  #
+  feedback_type: "feedback type:*"
+  feedback_bug: "Problem"
+  feedback_feature: "Wishful thinking"
+  feedback_compliment: "Compliment"
+  feedback_name: "Name (optional)"
+  feedback_comment: "Comment*"
+  feedback_sent: "Feedback sent"
+  feedback_fail: "Both feedback type and a comment are required"
+  feedback_form: "Feedback Form"
+  feedback_form_fail: "Unable to send feedback"
+  
+  
+  
+  
+  #
+  # Medias
+  #
+  media: "Media"
+  medias: "Medias"
+  
+  media_edit_type: "Type"
+  media_edit_path: "Web Address"
+  media_edit_state: "State"
+  media_edit_file: "File"
+  media_edit_name: "Name"
+  media_edit_comment: "Comment"
+  
+  media_address: "Address"
+  media_warning: "Warning"
+  media_warning_message: "A live stream will never end. Make sure to set a timeout or use an exclusive schedule to force players to update."
+  media_download: "Download item"
+  media_url: "Browse to url"
+  media_length: "Length"
+  media_retry: "Attempting retry"
+  media_do_retry: "Retry Transcoding"
+  media_retry_word: "Retry"
+  media_video_address: "Video Address"
+  media_transcoding_recovered: "Transcoding recovered. Any pending items have had their conversions started."
+  media_conversion_complete: "conversion complete"
+  media_conversion_error: "conversion error.<br />Please retry then contact your administrator if problems continue."
+  media_preview_fail: "Unable to preview this item in this browser"
+  media_preview_not_ready: "Unable to preview this item"
+  
+  media_select_type: "Select Media Type*"
+  media_select_web: "a web page"
+  media_select_file: "a file on your computer"
+  media_select_plugin: "a plugin"
+  media_select_stream: "Streaming video URL"
+  media_select_image: "An image located online"
+  media_select_video: "A video located online"
+  
+  media_added_successfully: "added successfully"
+  
+  media_alt_address: "Video Address (alt format)"
+  media_image_address: "Image Address"
+  media_alternative: "Alternative"
+  media_not_supported: "not supported"
+  
+  media_work_created: "entry created"
+  media_work_pending: "pending conversion"
+  media_work_pending_alternative: "pending alternate format"
+  media_work_converting: "converting"
+  media_work_converting_alternative: "converting alternate format"
+  media_work_converted: "converted"
+  media_work_ready: "ready"
+  media_work_error: "error"
+  media_work_alternative_unavaliable: "alternate format missing"
+  
+  media_not_in_playlist: "Media is not assigned to any playlists"
+  media_is_allocated_to: "Media is assigned to"
+  
+  
+  
+  
+  #
+  # Layout
+  #
+  
+  really_delete: "Really delete this"
+  confirm_delete: "Are you sure you would like to delete the"
+  selected_items: "selected items"
+  warning_notice: "Editing unavailable Fridays 3-5pm (maintenance)"
+  transcoding_recovery: "Recover from transcoding failures"
+  library: "LIBRARY"
+  settings: "SETTINGS"
+  content_loading: "Content Loading..."
+  feedback_line: "Problems? Wishlist? Compliments?"
+  feedback: "Feedback"
+  sydney_signage: "Sydney Signage"
+  signage: "Signage"
+  searching: "Searching..."
+  preview: "Preview"
+  login: "Login"
+  
+  signage_solution: "A digital signage solution"
+  browse_media: "Browse Media"
+  view_displays: "View Displays"
+  
+  form_save_notice: "prohibited this record from being saved"
+  
+  
+  #
+  # Groups
+  #
+  
+  group: "Schedule"
+  groups: "Schedules"
+  
+  groups_default_playlist: "Default Playlist:"
+  
+  groups_key_emergency: "Emergency"
+  groups_key_exclusive: "Exclusive"
+  groups_key_shared: "Shared with other scheduled content"
+  
+  groups_deleted: "Schedule successfully deleted"
+  
+  groups_edit_name: "Name"
+  groups_edit_comment: "Comment"
+  
+  
+  #
+  # Displays
+  #
+  
+  display: "Display"
+  displays: "Displays"
+  
+  displays_share: "Share"
+  
+  displays_list_online: "Online"
+  displays_list_shared: "Shared"
+  
+  displays_edit_building: "Building"
+  displays_edit_location: "Location"
+  displays_edit_camera: "IP Camera"
+  displays_edit_name: "Name"
+  displays_edit_comment: "Comment"
+  displays_edit_link: "Link"
+  
+  display_not_in_schedule: "not in any schedules"
+  display_shared_between: "shared between"
+  display_no_playlist: "No playlist selected"
+  
+  in: "in"	# used in display helper
+  
+  display_no_use: "Display not in use"
+  display_online: "Display online"
+  display_unknown: "Display could be offline or restarting"
+  display_offline: "Display error or offline"
+  
+  display_monitored: "Monitored"
+  display_start: "Start"
+  display_end: "End"
+  
+  
+  #
+  # Converters
+  #
+
+  converter: "Converter"
+  converters: "Converters"
+
+  converters_edit_command: "Command"
+  converters_edit_applies: "Applies to"
+  converters_edit_converts: "Converts to"
+  converters_edit_enabled: "Enabled"
+  converters_edit_description: "Description"
+  
+  
+  #
+  # Auth sources translations
+  #
+  
+  authentication_servers: "Authentication Servers"
+  authentication: "Authentication"
+  
+  auth_source: "Authentication Source"
+  auth_sources: "Authentication Sources"
+  
+  auth_sources_list_name: "Name"
+  auth_sources_list_type: "Type"
+  auth_sources_list_host: "Host"
+  
+  auth_sources_preview_title: "LDAP Attributes"
+  
+  auth_sources_edit_first_name: "First name"
+  auth_sources_edit_last_name: "Last name"
+  auth_sources_edit_login: "Login"
+  auth_sources_edit_email: "Email"
+  auth_sources_edit_group: "Group membership"
+  auth_sources_edit_dn: "Base DN"
+  auth_sources_edit_host: "Host"
+  auth_sources_edit_port: "Port"
+  auth_sources_edit_secured: "Secured"
+  auth_sources_edit_account: "Account"
+  auth_sources_edit_account_pass: "Account password"
+  
+  auth_sources_edit_select: "Select Authentication Type:"
+  
+  auth_sources_change_password: "Change password?"
+  
+  
+  #
+  # Active record
+  #
+  activerecord:
+    attributes:
+      media:
+        alt_path: "Alternative address"
+        path: "Web address"
+        name: "Name"

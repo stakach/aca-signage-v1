@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sleep 3
+xdotool search --onlyvisible --class "chromium-browser" windowactivate --sync
+sleep 5
+xdotool key F5

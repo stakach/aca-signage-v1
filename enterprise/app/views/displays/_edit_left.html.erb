@@ -1,0 +1,49 @@
+
+<%= form_for(display, {:url => display_path(display.id), :remote => true, :method => :put}) do |f| %>
+
+	<p>
+		<%= f.text_field :name %>
+	</p>
+	<p>
+		<%= f.text_area :comment %>
+	</p>
+
+	<table>
+		<tr>
+			<td class="desc"><%= f.label :permalink, 'Custom Display URL' %>:</td>
+			<td><%= f.text_field :permalink %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :physical, 'Fixed Display' %>:</td>
+			<td><%= f.check_box :physical %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :building, t(:displays_edit_building) %>:</td>
+			<td><%= f.text_field :building %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :location, t(:displays_edit_location) %>:</td>
+			<td><%= f.text_field :location %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :link, t(:displays_edit_camera) %>:</td>
+			<td><%= f.text_field :link %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :timezone, t(:user_edit_timezone) %>:</td>
+			<td><%= f.time_zone_select(:timezone, nil, :default => current_user.timezone) %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= t(:display_monitored) %>:</td>
+			<td class="nano-edit"><%= f.check_box :notify_offline %> <%= f.label :start_checking, t(:display_start) %> <%= f.text_field :start_checking, {:maxlength => 5} %> - <%= f.text_field :end_checking, {:maxlength => 5} %> <%= f.label :end_checking, t(:display_end) %></td>
+		</tr>
+	</table>
+	
+	<div class="edit-save">
+		<%= f.submit t(:update) %>
+	</div>
+	
+<% end %>
+
+<%= render 'shared/edit_cancel' %>
+

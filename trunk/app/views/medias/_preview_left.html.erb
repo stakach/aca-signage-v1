@@ -1,0 +1,22 @@
+
+<h1 class="editable"><%= media.name %></h1>
+<%= simple_format(media.comment, :class => 'editable') %>
+
+<table>
+	<tbody>
+		<tr>
+			<td class="desc"><%= t(:media_edit_type) %>:</td>
+			<td><%= media.classification %></td>
+		</tr>
+		<% if media.media_type >= 10 %>
+			<tr>
+				<td class="desc"><%= t(:media_address) %>:</td>
+				<td class="editable"><%= media.file_path %></td>
+			</tr>
+		<% end %>
+		<tr>
+			<td class="desc">Background:</td>
+			<td class="editable"><span style="display:inline-block;height:0.8em;width:30px;background-color:#<%= media.background %>;"></span></td>
+		</tr>
+	</tbody>
+</table>

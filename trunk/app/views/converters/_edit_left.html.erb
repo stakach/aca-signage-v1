@@ -1,0 +1,33 @@
+
+<%= form_for(converter, {:url => converter_path(converter.id), :remote => true, :method => :put}) do |f| %>
+
+	<p>
+		<%= f.text_field :description %>
+	</p>
+	<p>
+		<span style="vertical-align:top;"><%= f.label :command, "#{t(:converters_edit_command)}:" %></span> <%= f.text_area :command %>
+	</p>
+
+	<table>
+		<tr>
+			<td class="desc"><%= f.label :applies_to, t(:converters_edit_applies) %></td>
+			<td><%= f.text_field :applies_to %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :accepts_file_id, t(:converters_edit_converts) %></td>
+			<td><%= f.select(:accepts_file_id, AcceptsFile.all.map {|u| [u.mime,u.id]}) %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :enabled, t(:converters_edit_enabled) %></td>
+			<td class="small-edit"><%= f.check_box :enabled %></td>
+		</tr>
+	</table>
+	
+	<div class="edit-save">
+		<%= f.submit t(:update) %>
+	</div>
+	
+<% end %>
+
+<%= render 'shared/edit_cancel' %>
+

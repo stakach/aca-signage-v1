@@ -1,0 +1,285 @@
+//= require application
+//= require colorpicker
+//= require player/signage.elements
+//= require jquery.remotipart
+//= require resolute/resumables
+
+
+var checkRunning = true; // Are we checking for conversions to complete?
+
+//
+// Retry transcoding
+//
+function doRetry() {
+	var id = get_id($('.context-menu-selection'));
+	// ajax up the command
+	$.ajax({
+		dataType: 'script',
+		type: 'POST',
+		url: '/medias/' + id + '/error_retry',
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, lang_transcoding_retry_fail, errorThrown);
+		}
+	});
+}
+
+//
+// Edit and item
+//
+function doEdit() {
+	var id = get_id($('.context-menu-selection'));
+	
+	$.ajax({
+		type: "GET",
+		url: '/' + pageLanguage + '/medias/' + id + '/edit',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, lang_media_edit_fail, errorThrown);
+		}
+	});
+}
+
+//
+// Add menu items
+//
+menuBindings['edit-media'] = function(t) {
+	doEdit();
+};
+menuBindings['retry-error'] = function(t) {
+	doRetry();
+};
+
+
+$(function() {
+	var csrf_token = $('meta[name=csrf-token]').attr('content'),
+	    csrf_param = $('meta[name=csrf-param]').attr('content');
+
+
+	//
+	// Confirm page exit while an upload is taking place
+	//
+	function confirmExit() {
+		return lang_media_upload_warning;
+	}
+	
+	
+	//
+	//	Drag and Drop upload code
+	//
+	if ($.support.filereader && $.support.formdata) {
+		var diag = $('<div />').html('<div></div><p></p>');
+		var progress = diag.children('div').progressbar({
+			value: 0
+		});
+		var status = diag.children('p');
+		var draghotspot = $('#right');
+		var failures = 0;
+
+		draghotspot.resumable({
+			onStart: function (event, files) {
+				window.onbeforeunload = confirmExit; // Make sure we warn the user before exiting the page while uploading
+				failures = 0;
+				progress.progressbar("value", 0);
+
+				var thebuttons = {};
+				thebuttons["Cancel"] = function () {
+					draghotspot.trigger('cancelAll');
+				};
+				diag.dialog({
+					modal: true,
+					buttons: thebuttons,
+					close: function () {
+						if (window.onbeforeunload != null)
+							draghotspot.trigger('cancelAll');
+					}
+				});
+				return true;
+			},
+			onUploadStarted: function (event, name, index, total) {
+				diag.dialog('option', 'title', name);
+				status.text('Uploading ' + (index + 1) + ' of ' + total);
+			},
+			onUploadProgress: function (event, completed, name, index, total) {
+				progress.progressbar("value", Math.ceil(completed * 100));
+			},
+			onUploadError: function(event, name, index, error, messages) {
+				if(error == 406)
+					$.noticeAdd({ text: "File " + name + " not supported", stayTime: 6000 });
+				else if (error == 403)
+					$.noticeAdd({ text: "Access denied uploading " + name + ". Try logging off and on again", stayTime: 6000 });
+				else
+					$.noticeAdd({ text: "Unknown error while processing " + name + ". Please try again", stayTime: 6000 });
+			},
+			onFinish: function (event, total, failures) {
+				window.onbeforeunload = null; 		// No more need for user warning
+				diag.dialog("close").dialog("destroy");
+				doSearch();
+				$.noticeAdd({ text: (total - failures) + " items successfully uploaded", stayTime: 6000 });
+			}
+		}).css({
+			'background-image': 'url(<%= asset_path 'drag-background.png' %>)',
+			'background-repeat': 'no-repeat',
+			'background-position': 'center center'
+		}).bind('dragenter dragover', function(){
+			$('#right table').stop(true).animate({opacity:0.2});
+			return false;
+		}).bind('dragleave drop', function(){
+			$('#right table').stop(true).animate({opacity:1});
+		});
+	}
+	
+	//
+	// Drag and drop downloads (chrome only at the moment)
+	//
+	$('a.dnd-downloads').live('dragstart', function (event) {
+		try {
+			event.originalEvent.dataTransfer.setData('DownloadURL', $(this).attr('href'));
+		} catch (err) { } //If not chrome
+	});
+
+
+	//
+	// Show appropriate preview
+	//
+	customPreview = function() {
+		var len = $('.context-menu-selection').length;
+		if (len == 0) {
+			$preview.html("<img src='<%= asset_path 'footer/folder.png' %>' alt='" + lang_preview_nothing_selected + "' />");
+			scalePreview();
+		}
+		else if (len == 1) {
+			var id = get_id($('.context-menu-selection'));
+			// ajax down the preview for the current selected item
+			$.ajax({
+				dataType: 'script',
+				url: '/' + pageLanguage + '/medias/' + id
+			});
+		}
+	};
+
+	jQuery.preLoadImages('<%= asset_path 'footer/unknown.png' %>');
+
+
+	//
+	// Enable droppable for this view ---------------------
+	//	Object must be a media item
+	//
+	dropDetected = function(playlist, medias) {
+		$.ajax({
+			type: "POST", url: '/playitems',
+			dataType: "script",
+			data: {
+				'medias': medias,
+				'playlist_id': playlist
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				error_notice(xhr, lang_media_drag_error, errorThrown);
+			},
+			success: function(data, textStatus, xhr) {
+				if (medias.length > 1)
+					$.noticeAdd({ text: medias.length + " " + lang_media_drag_multiple, stayTime: 6000 });
+				else
+					$.noticeAdd({ text: medias.length + " " + lang_media_drag_singular, stayTime: 6000 });
+			}
+		});
+	}
+
+	newSidebarItem = function($object) {	//	Same as playlists.js
+		if ($object.hasClass('playlist-drop'))
+			$object.makeDroppable();
+	}
+
+	$('.playlist-drop').makeDroppable().droppable("option", "accept", 'tr.media > *');
+
+
+	//
+	// Deleting Items	(Does individual deletes as if resource is in use the delete may fail)
+	//	We need to maintain database to file system relationship as well as the accuracy of the view
+	//
+	function deleteItem(media_id, number) {
+		$.ajax({
+			type: "POST", url: '/medias/' + media_id,
+			data: { _method: 'delete' },
+			dataType: "script",
+			success: function(data, textStatus, xhr) {
+				media = $('#media_' + media_id);
+
+				media.fadeOut("slow", function() {
+					media.remove();
+					listLength -= 1;
+					// listLengthChanged(1);
+
+					$('.context-menu-selection').removeClass('context-menu-selection');
+					
+					if (number != null) {
+						defaultPreview(); 	// Update the preview
+						customPreview();
+					}
+				});
+
+				if (number != null)
+					$.noticeAdd({ text: lang_media_delete_success, stayTime: 6000 });
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				error_notice(xhr, lang_media_delete_failed, errorThrown);
+			}
+		});
+	}
+
+	deleteItems = function(object_ids) {
+		$.each(object_ids, function(index, val) {
+			if (index != object_ids.length - 1)
+				deleteItem(val);
+			else
+				deleteItem(val, object_ids.length);
+		});
+	};
+
+
+	//
+	// Decied which medu items to show
+	//
+	showMenu = function(e, menu) {	// Only show relavant items
+		if ($('.context-menu-selection').length > 1)
+			$('#retry-error, #edit-media', menu).remove();
+		else if (!$('tr.context-menu-selection').hasClass('transerror'))
+			$('#retry-error', menu).remove();
+	};
+
+
+	//
+	// Lets hook into the seach callback
+	//	Keeps the view accurate
+	//
+	searchCompleted = function() {
+		if (!checkRunning) {
+			checkRunning = true;
+			window.setTimeout("check_transcoding();", 5000); // As the search would have just updated the status we can wait before checking again
+		}
+	};
+
+	//
+	// Lets kick off a status checker
+	//
+	window.setTimeout("check_transcoding();", 5000);
+});
+
+//
+// Notify when encoding complete
+//
+function check_transcoding() {
+	var trans = $('table.list tr.transcoding');
+	if (trans.length > 0) {
+		$.each(trans, function(index, val) {
+			$.ajax({
+				type: "GET",
+				url: '/' + pageLanguage + '/medias/' + get_id($(val)) + '/row',
+				dataType: "script"
+			});
+		});
+
+		window.setTimeout("check_transcoding();", 10000);
+	}
+	else
+		checkRunning = false;
+}

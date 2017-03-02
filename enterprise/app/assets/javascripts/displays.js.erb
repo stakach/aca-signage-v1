@@ -1,0 +1,156 @@
+//= require application
+
+
+function doShare() {
+	var id = get_id($('.context-menu-selection'));
+	// ajax down the share options
+	$.ajax({
+		dataType: 'script',
+		url: '/' + pageLanguage + '/group_displays/new',
+		data: { display: id },
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, lang_display_sharing_fail, errorThrown);
+		}
+	});
+}
+
+
+function doEdit() {	// Same as doEdit in Groups.js
+	var id = get_id($('.context-menu-selection'));
+
+	$.ajax({
+		type: "GET",
+		url: '/' + pageLanguage + '/displays/' + id + '/edit',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, lang_display_edit_fail, errorThrown);
+		}
+	});
+}
+
+//
+// Add menu item
+//
+menuBindings['share'] = function(t) {
+	doShare();
+};
+menuBindings['edit-display'] = function(t) {
+	doEdit();
+};
+
+
+$(function() {
+
+
+	//
+	// Show appropriate preview
+	//
+	customPreview = function() {
+		var len = $('.context-menu-selection').length;
+		if (len == 0) {
+			$preview.html("<img src='<%= asset_path 'footer/display.png' %>' alt='" + lang_preview_nothing_selected + "' />");
+			scalePreview();
+		}
+		else if (len == 1) {
+			var id = get_id($('.context-menu-selection'));
+			// ajax down the preview for the current selected item
+			$.ajax({
+				dataType: 'script',
+				url: '/' + pageLanguage + '/displays/' + id
+			});
+
+			enablePlay();
+		}
+	};
+
+
+	//
+	// Enable droppable for this view ---------------------
+	//
+	dropDetected = function(group, displays) {
+		$.ajax({
+			type: "POST", url: '/groupitems',
+			dataType: "script",
+			data: {
+				'displays': displays,
+				'group_id': group
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				error_notice(xhr, lang_display_drag_error, errorThrown);
+			},
+			success: function(data, textStatus, xhr) {
+				if (displays.length > 1)
+					$.noticeAdd({ text: displays.length + " " + lang_display_drag_multiple, stayTime: 6000 });
+				else
+					$.noticeAdd({ text: displays.length + " " + lang_display_drag_singular, stayTime: 6000 });
+			}
+		});
+	}
+
+
+	//
+	// Groups are made droppable by application.js for playlists
+	//
+	newSidebarItem = function($object) {
+		if ($object.hasClass('group-drop'))
+			//$object.makeDroppable();
+			$object.droppable("option", "accept", $('.group-drop').droppable("option", "accept") + ', tr.display > *');
+	}
+
+	$('.group-drop').droppable("option", "accept", $('.group-drop').droppable("option", "accept") + ', tr.display > *');
+
+
+	//
+	// Deleting Items
+	//
+	deleteItems = function(object_ids) {
+		$.ajax({
+			type: "POST", url: '/displays/destroy',
+			data: {
+				'_method': 'delete',
+				'items': object_ids
+			},
+			dataType: "script",
+			success: function(data, textStatus, xhr) {
+
+				$.each(object_ids, function(index, val) {
+					$('#display_' + val).fadeOut("slow", function() {
+						$('#display_' + val).remove();
+						listLength -= 1;
+
+						$('.context-menu-selection').removeClass('context-menu-selection');
+						
+						if (index == object_ids.length - 1) {
+							defaultPreview(); 	// Update the preview
+							customPreview();
+						}
+					});
+				});
+
+				$.noticeAdd({ text: object_ids.length + " " + lang_display_delete_success, stayTime: 6000 });
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				error_notice(xhr, lang_display_delete_failed, errorThrown);
+			}
+		});
+	};
+
+	showMenu = function(e, menu) {	// Only show relavant items
+		if($('.context-menu-selection').length > 1)
+			$('#share, #edit-display', menu).remove();
+		if ($('#share').length == 0)
+			$('#share', menu).remove();
+	};
+
+
+	//
+	// Preview button clicked
+	//
+	previewButton = function() {
+
+		if ($('.context-menu-selection').length != 1)
+			return;
+
+		window.open($('#footer-left td.new-window a').attr('href') + '?preview=1', "_blank", "toolbar=false,location=yes,status=no,directories=no,menubar=no,scrollbars=no,resizable=yes,width=800,height=600");
+	};
+});

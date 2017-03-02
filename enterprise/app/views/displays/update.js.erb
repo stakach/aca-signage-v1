@@ -1,0 +1,13 @@
+
+<% if @saved %>
+
+	<%= render :template => 'displays/show' %>
+	$.noticeAdd({ text: "<%= "#{t(:display)} #{t(:update_success)}" %>.", stayTime: 6000 });
+	$('.context-menu-selection').html('<%= escape_javascript(render('displays/row_inner', :display => @display))%>');
+	$('.context-menu-selection td.time-entry').humaneDates();
+
+<% else %>
+
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @display)) %>", stay: true });
+
+<% end %>

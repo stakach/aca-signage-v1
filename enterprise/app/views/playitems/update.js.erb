@@ -1,0 +1,27 @@
+
+<%= render 'show_right' %>
+<% if @saved %>
+
+	<% if @items.nil? %>
+		$.noticeAdd({ text: "<%= "#{t(:playitem)} #{t(:update_success)}" %>.", stayTime: 6000 });
+		$('#playitem_<%= @playitem.id %>').replaceWith('<%= escape_javascript(render('playlists/row', :playitem => @playitem))%>');
+		$('#playitem_<%= @playitem.id %>').addClass('context-menu-selection');
+		$('#playitem_<%= @playitem.id %> td.transition').text(EFFECTS[<%= @playitem.transition_effect %>]);
+		
+	<% else %>
+		
+		$.noticeAdd({ text: "<%= t(:playitem_multiple_update) %>.", stayTime: 6000 });
+		<% @items.each do |item| %>
+			$('#playitem_<%= item.id %>').replaceWith('<%= escape_javascript(render('playlists/row', :playitem => item))%>');
+			$('#playitem_<%= item.id %>').addClass('context-menu-selection');
+			$('#playitem_<%= item.id %> td.transition').text(EFFECTS[<%= item.transition_effect %>]);
+		<% end %>
+	
+	<% end %>
+
+	<%= render :template => 'playitems/update_playlist' %>
+<% else %>
+
+	error_notice({}, '<%= t(:playitem_update_failed) %>', 'error');
+
+<% end %>

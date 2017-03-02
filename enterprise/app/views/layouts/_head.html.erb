@@ -1,0 +1,48 @@
+<head>
+	<title><%= t(:signage) %></title>
+	
+	<link rel="icon" type="image/png" href="/favicon48.png" sizes="48x48" />
+	<link rel="icon" type="image/png" href="/favicon.png" sizes="32x32" />
+	<link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
+	
+	<!--
+		CSS
+	 -->
+	<%= stylesheet_link_tag "application" %>
+			
+	<!--
+		Allow IE (8) to support HTML 5 elements
+	 -->
+	<!--[if lte IE 8]>
+		<%= javascript_include_tag "iehtml5" %>
+	<![endif]-->
+	
+	<%= csrf_meta_tag %>						<!-- Rails security tag for ajax requests -->
+	
+	
+	<%= javascript_include_tag "core-#{I18n.locale}" %>
+	<%= javascript_include_tag "#{params[:controller]}-#{I18n.locale}" %>
+	<%= javascript_include_tag params[:controller] %>
+	
+	
+	<% if flash[:notice] %>
+		<script type="text/javascript">
+		//<![CDATA[
+			$(function() {
+				$.noticeAdd({ text: "<%= flash[:notice] %>", stayTime: 12000 });
+			});
+		//]]>
+		</script>
+	<% end %>
+	
+	
+	<!--
+		Browser helpers
+	 -->
+	<%= render('layouts/helpers') %>
+	<meta name="application-url" content="<%= root_url %>"/>
+	
+	<meta name="msapplication-starturl" content="<%= root_url %>" />
+	<meta name="msapplication-task" content="name=<%= t(:browse_media) %>;action-uri=<%= medias_path %>;icon-uri=<%= asset_path('ie9icons/media.ico') %>" />
+	<meta name="msapplication-task" content="name=<%= t(:view_displays) %>;action-uri=<%= displays_path %>;icon-uri=<%= asset_path('ie9icons/display.ico') %>" />
+</head>

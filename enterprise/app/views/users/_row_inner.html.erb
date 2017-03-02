@@ -1,0 +1,5 @@
+
+<td class='description'><%= user.name %></td>
+<td class='source'><%= user.email %></td>
+<td class='admin'><%= user.user_groups.where('user_groups.group_id = ?', current_group.id).first.user_desc %></td>
+<td class='time-entry' title="<%= user.created_at.utc.iso8601 %>"></td>

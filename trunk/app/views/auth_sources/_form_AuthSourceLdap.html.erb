@@ -1,0 +1,54 @@
+
+	
+<p>
+	<%= f.label :name, t(:auth_sources_list_name) %><%= mark_required(@auth_source, :name) %><br />
+	<%= f.text_field :name %>
+</p>
+<p>
+	<%= f.label :host, t(:auth_sources_edit_host) %><%= mark_required(@auth_source, :host) %><br />
+	<%= f.text_field :host %>
+</p>
+
+<p>
+	<%= f.label :port, t(:auth_sources_edit_port) %><%= mark_required(@auth_source, :port) %><br />
+	<%= f.text_field :port %>
+</p>
+<p>
+	<%= f.label :tls, "#{t(:auth_sources_edit_secured)}?" %><%= mark_required(@auth_source, :tls) %>
+	<%= f.check_box :tls %>
+</p>
+<p>
+	<%= f.label :account, t(:auth_sources_edit_account) %><%= mark_required(@auth_source, :account) %><br />
+	<%= f.text_field :account %>
+</p>
+
+<p>
+	<%= f.label :account_password, t(:auth_sources_edit_account_pass) %><%= mark_required(@auth_source, :account_password) %><br />
+	<%= f.text_field :account_password %>
+</p>
+<p>
+	<%= f.label :base_dn, t(:auth_sources_edit_dn) %><%= mark_required(@auth_source, :base_dn) %><br />
+	<%= f.text_field :base_dn %>
+</p>
+
+<p>
+	<%= f.label :attr_login, t(:auth_sources_edit_login) %><%= mark_required(@auth_source, :attr_login) %><br />
+	<%= f.text_field :attr_login %>
+</p>
+<p>
+	<%= f.label :attr_firstname, t(:auth_sources_edit_first_name) %><%= mark_required(@auth_source, :attr_firstname) %><br />
+	<%= f.text_field :attr_firstname %>
+</p>
+<p>
+	<%= f.label :attr_lastname, t(:auth_sources_edit_last_name) %><%= mark_required(@auth_source, :attr_lastname) %><br />
+	<%= f.text_field :attr_lastname %>
+</p>
+<p>
+	<%= f.label :attr_mail, t(:auth_sources_edit_email) %><%= mark_required(@auth_source, :attr_mail) %><br />
+	<%= f.text_field :attr_mail %>
+</p>
+<p>
+	<%= f.label :attr_member, t(:auth_sources_edit_group) %><%= mark_required(@auth_source, :attr_member) %><br />
+	<%= f.text_field :attr_member %>
+</p>
+

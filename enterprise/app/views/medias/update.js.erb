@@ -1,0 +1,22 @@
+
+<% if @saved %>
+
+	<%= render :template => 'medias/show' %>
+	$.noticeAdd({ text: "<%= "#{t(:media)} #{t(:update_success)}" %>.", stayTime: 6000 });
+	$('#media_<%= @media.id %>').replaceWith('<%= escape_javascript(render('medias/row', :media => @media))%>');
+	$('#media_<%= @media.id %>').addClass('context-menu-selection');
+	$('#media_<%= @media.id %> td.time-entry').humaneDates();
+	
+	var play_selected = null;
+	<% @media.playlists.each do |playlist| %>
+		play_selected = $('#playlist_<%= playlist.id %> > span').hasClass('selected');
+		$('#playlist_<%= playlist.id %>').replaceWith('<%= escape_javascript(render('layouts/content/playlist', :playlist => playlist))%>');
+		if(play_selected)
+			$('#playlist_<%= playlist.id %> > span').addClass('selected');
+	<% end %>
+
+<% else %>
+
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @media)) %>", stay: true });
+
+<% end %>

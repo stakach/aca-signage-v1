@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flickr Viewer</title>
+	<script type="text/javascript" src="jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="jquery.scale.js"></script>
+	<style type="text/css">
+		html, body {
+			height:100%;
+			width:100%;
+			background-color: #000;
+			overflow: hidden;
+		}
+		
+		* {
+			margin:0px;
+			padding:0px;
+		}
+		
+		#viewer {
+			height:100%;
+			width:100%;
+			text-align:center;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="viewer"></div>
+	<script>
+		var parentWindow = null,
+			options = null,
+			connectivity = ('onLine' in window.navigator),
+			apiKey = '',
+			loaded = false,
+			image_id;
+	
+	
+		//
+		// Communication functions for the signage plugin API
+		//
+		window.addEventListener("message", receiveMessage, false);
+		function receiveMessage(event) {
+			if(event.data['message'] == 0) {	// PLUGIN.hello == 0
+				parentWindow = event.source;
+				
+				if(connectivity) {
+					if(!navigator.onLine) {
+						parentWindow.postMessage({message: 3, reason: 'No connectivity'}, '*');	// ELEMENT.error == 3
+						return;	// We won't be loading flickr
+					}
+				}
+				
+				options = event.data['options'];
+				image_id = event.data['params'];
+				if(loaded)
+					loadFlickr();
+			}
+		}
+		
+		
+		function loadFlickr() {
+			//
+			//	Example:
+			// GET: http://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=3814c7b91a6c2c850c9f1f4bac8a8eaf&photo_id=7829673838+-+1-DSC_3349&format=json
+			//
+			$.ajax("http://api.flickr.com/services/rest/", {
+				dataType: 'jsonp',
+				crossDomain: true,
+				jsonp: 'jsoncallback',
+				data: {
+					method: 'flickr.photos.getInfo',
+					api_key: "3814c7b91a6c2c850c9f1f4bac8a8eaf",
+					photo_id: image_id,
+					format: "json"
+				},
+				success: function(data) {
+					if(data.stat == 'ok'){
+						data = data.photo;
+						
+						//var url = 'http://farm' + data.farm + '.staticflickr.com/' + data.server + '/' + data.id + '_' + data.secret + '_o.' + data.originalformat;
+						var url = 'http://farm' + data.farm + '.staticflickr.com/' + data.server + '/' + data.id + '_' + data.secret + '_b.jpg';	// 1024px
+						
+						$('<img />').on('load.img', function(){
+							$(this).off('.img')
+								.appendTo('#viewer')
+								.scale("stretch", "vert");
+								
+							parentWindow.postMessage({message: 0}, '*');						// ELEMENT.ready == 0
+							parentWindow.postMessage({message: 1}, '*');						// ELEMENT.loaded == 1
+						}).on('abort.img error.img', function(){
+							$(this).off('.img').remove();
+							parentWindow.postMessage({message: 3, reason: 'load failed'}, '*');	// ELEMENT.error == 3
+						}).attr('src', url);
+					} else {
+						parentWindow.postMessage({message: 3, reason: "Load failed: " + data.stat}, '*');		// ELEMENT.error == 3
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					parentWindow.postMessage({message: 3, reason: errorThrown}, '*');		// ELEMENT.error == 3
+				}
+			});
+		}
+		
+		
+		$(function() {
+			loaded = true;
+			
+			$(window).bind('resize', function(){
+				$('img').scale("stretch", "vert");
+			});
+			
+			if(!!image_id)
+				loadFlickr();
+		});
+    </script>
+
+</body>
+</html>

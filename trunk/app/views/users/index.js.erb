@@ -1,0 +1,6 @@
+
+$('table.users tbody').append(
+<% @users.each do |user| %>
+	"<%= escape_javascript(render('row', :user => user))%>" + 
+<% end %>
+"");

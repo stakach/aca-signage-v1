@@ -1,0 +1,61 @@
+<div id="right-banner">
+
+	<div id="default-playlist">
+		<%= render 'playlist_form' %>
+	</div>
+
+	<div id="calendar-wrap">
+		<div id="calendar">
+		</div>
+	</div>
+	
+	<div id="colour-key">
+		<span id="red" class="block"></span><span><%= t(:groups_key_emergency) %></span>
+		<span id="orange" class="block"></span><span><%= t(:groups_key_exclusive) %></span>
+		<span id="blue" class="block"></span><span><%= t(:groups_key_shared) %></span>
+	</div>
+</div>
+
+<table class="list displays">
+	<thead><tr>
+		<th><%= t(:displays_list_online) %></th>
+		<th data-dbcol="displays.name" class="orderable"><%= t(:displays_edit_name) %></th>
+		<th data-dbcol="displays.building" class="orderable"><%= t(:displays_edit_building) %></th>
+		<th data-dbcol="displays.location" class="orderable"><%= t(:displays_edit_location) %></th>
+		<th><%= t(:displays_list_shared) %></th>
+		<th data-dbcol="displays.created_at" class="orderable ordered desc"><%= t(:added).capitalize %></th>
+	</tr></thead>
+	<tbody>
+		
+	</tbody>
+</table>
+
+
+<%= content_for :dynamic do %>
+<% end %>
+
+
+<%= content_for :contextmenu do %>
+	<li id="edit-display">
+		<%= image_tag('led-icons/textfield_rename.png', :alt => t(:edit), :title => t(:edit)) %> <%= t(:edit) %>
+	</li>
+<% end %>
+
+
+<%= content_for :preview do %>
+	<%= image_tag('footer/calendar.png', :alt => t(:groups)) %>
+<% end %>
+
+
+<%= content_for :script do %>
+
+	<%= stylesheet_link_tag "fullcalendar" %>
+	<%= javascript_include_tag "fullcalendar.min" %>
+	<%= javascript_include_tag "timepicker" %>
+	
+	<%= javascript_include_tag "locales/#{I18n.locale}/displays-#{I18n.locale}" %>
+	<%= javascript_include_tag "locales/#{I18n.locale}/groups-#{I18n.locale}" %>
+	<%= javascript_include_tag "groups" %>
+
+<% end %>
+

@@ -1,0 +1,14 @@
+
+<li id="playlist_<%= playlist.id %>" class="playlist-drop">
+	<span class="selection<%= ' selected' if @playitems && @playlist.id == playlist.id %>">
+		<% if playlist.random %>
+			<%= link_to image_tag('led-icons/shuffle.png', :alt => t(:playlist)) + playlist.name, playlist_path(playlist.id), :title => playlist.comment %>
+		<% else %>
+			<%= link_to image_tag('led-icons/text_list_numbers.png', :alt => t(:playlist)) + playlist.name, playlist_path(playlist.id), :title => playlist.comment %>
+		<% end %>
+		<span class='options'>
+			<%= link_to image_tag('led-icons/exclamation_octagon_fram.png', :alt => "#{t(:publish)} #{playlist.name}", :title => t(:is_not_published)), publish_playlist_path(playlist.id), :class => published?(playlist) %>
+			<%= link_to image_tag('led-icons/bin_closed.png', :alt => "#{t(:remove)} #{t(:playlist)}", :title => "#{t(:remove)} #{t(:playlist)}"), playlist_path(playlist.id), :data => {:confirm => "#{t(:really_delete)} #{t(:playlist).downcase}?"}, :method => :delete %>
+		</span>
+	</span>
+</li>

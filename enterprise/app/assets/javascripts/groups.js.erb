@@ -1,0 +1,321 @@
+//= require application
+//= require fullcalendar.min
+//= require timepicker
+//= require detect_timezone
+//= require jquery.detect_timezone
+
+
+
+function doEdit() {	// Same as doEdit in Displays.js
+	var id = $('.context-menu-selection').data('displayId');
+
+	$.ajax({
+		type: "GET",
+		url: '/' + pageLanguage + '/displays/' + id + '/edit',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, lang_display_edit_fail, errorThrown);
+		}
+	});
+}
+
+//
+// Add menu item
+//
+menuBindings['edit-display'] = function(t) {
+	doEdit();
+};
+
+$(function() {
+
+
+	//
+	// Show appropriate preview
+	//
+	customPreview = function() {
+		var len = $('.context-menu-selection').length;
+		if (len == 0) {
+			$.ajax({
+				dataType: 'script',
+				url: window.location.pathname + '/footer'
+			});
+		}
+		else if (len == 1) {
+			var id = get_id($('.context-menu-selection'));
+			// ajax down the preview for the current selected item
+			$.ajax({
+				dataType: 'script',
+				url: '/' + pageLanguage + '/groupitems/' + id
+			});
+
+			enablePlay();
+		}
+	};
+
+
+
+	//
+	// Enable droppable for this view ---------------------
+	//
+	dropDetected = function(group, object_ids) {
+		var thebuttons = {};
+		thebuttons[lang_copy] = function() {
+			$.ajax({
+				type: "POST", url: '/groupitems/copy',
+				data: {
+					'items': object_ids,
+					'group': group
+				},
+				dataType: "script",
+				success: function(data, textStatus, xhr) {
+					$('#dialog').dialog('close');
+
+					$.noticeAdd({ text: object_ids.length + " " + lang_display_copy_success, stayTime: 6000 });
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, lang_display_copy_error, errorThrown);
+				}
+			});
+		};
+		thebuttons[lang_move] = function() {
+			$.ajax({
+				type: "POST", url: '/groupitems/move',
+				data: {
+					'_method': 'put',
+					'items': object_ids,
+					'group': group
+				},
+				dataType: "script",
+				success: function(data, textStatus, xhr) {
+					$('#dialog').dialog('close');
+
+					$.each(object_ids, function(index, val) {
+						$('#groupitem_' + val).fadeOut("slow", function() {
+							$('#groupitem_' + val).remove();
+
+							$('.context-menu-selection').removeClass('context-menu-selection');
+							defaultPreview(); 	// Update the preview
+							customPreview();
+						});
+					});
+
+					$.noticeAdd({ text: object_ids.length + " " + lang_display_move_success, stayTime: 6000 });
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, lang_display_move_error, errorThrown);
+				}
+			});
+		};
+
+		$('#dialog').html('<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Moving the selected items will remove them from this playlist.').dialog({
+			resizable: false,
+			modal: true,
+			title: 'Move or Copy?',
+			buttons: thebuttons
+		});
+	}
+
+
+
+	//
+	// must only accept displays as playlists are also draggable
+	//
+	$('.group-drop').droppable("option", "accept", $('.group-drop').droppable("option", "accept") + ', tr.display > *');
+
+	//
+	// must not be able to drop on self!!
+	//
+	var current_id = window.location.pathname.match(/\/\d+/);
+	current_id = current_id[current_id.length - 1].replace('/', '');
+	$('#group_' + current_id).droppable("destroy");
+
+
+
+	//
+	// Deleting Items
+	//
+	deleteItems = function(object_ids) {
+		$.ajax({
+			type: "POST", url: '/groupitems/destroy',
+			data: {
+				'_method': 'delete',
+				'items': object_ids
+			},
+			dataType: "script",
+			success: function(data, textStatus, xhr) {
+
+				$.each(object_ids, function(index, val) {
+					$('#groupitem_' + val).fadeOut("slow", function() {
+						$('#groupitem_' + val).remove();
+						listLength -= 1;
+
+						$('.context-menu-selection').removeClass('context-menu-selection');
+						
+						if (index == object_ids.length - 1) {
+							defaultPreview(); 	// Update the preview
+							customPreview();
+						}
+					});
+				});
+
+				$.noticeAdd({ text: object_ids.length + " " + lang_display_delete_success, stayTime: 6000 });
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				error_notice(xhr, lang_display_delete_failed, errorThrown);
+			}
+		});
+	};
+
+
+	newSidebarItem = function($object) {
+		if ($object.hasClass('group-drop'))	//	Same as displays.js
+			//$object.makeDroppable();
+			$object.droppable("option", "accept", $('.group-drop').droppable("option", "accept") + ', tr.display > *');
+		else if ($object.hasClass('playlist-drop')) {
+			var selected = $("#display_group_playlist_id option:selected");
+
+			//$object.playlistDraggable(); //	new playlists can be dragged (now part of the application.js)
+
+			$('#display_group_playlist_id').append('<option value="' + get_id($object) + '" selected="selected">' + $object.find('span.selection a').text() + '</option>'); // Add to drop down box
+			$('#display_group_playlist_id').val(selected.val());
+		}
+	}
+
+
+	//
+	// Calendar
+	//
+	$('#calendar').fullCalendar({
+		header: {
+			left: 'prev,next today',
+			right: 'title month,agendaWeek,agendaDay'
+		},
+		editable: true,
+		events: {
+			url: "/schedules/" + current_id + ".json",
+			data: {
+				timezone: $.fn.get_timezone()
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				error_notice(xhr, 'there was an error while fetching events!', errorThrown);
+			},
+			ignoreTimezone: true
+		},
+		height: $('#calendar-wrap').height(),
+		droppable: true,
+		aspectRatio: 4,
+		dropAccept: '.playlist-drop',
+		drop: function(date, allDay, jsEvent, ui) {
+			var end = null, playlist_id = get_id($(this));
+
+			if (allDay) {	// Calculate end time
+				end = new Date(date.getTime() + 86400000 - 60000); // Adds exactly one day - 1min
+			}
+			else {
+				end = new Date(date.getTime() + 7200000); // Adds exactly 2 hours
+			}
+
+			$.ajax({		// Display form for other options
+				type: "GET", url: '/' + pageLanguage + '/schedules/new',
+				dataType: "script",
+				data: {
+					start: $.fullCalendar.formatDate(date,"yyyy-MM-dd hh:mm tt"),
+					end: $.fullCalendar.formatDate(end, "yyyy-MM-dd hh:mm tt"),
+					all_day: allDay,
+					playlist_id: playlist_id,
+					group_id: current_id,
+					timezone: $.fn.get_timezone()
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, lang_schedule_create_error, errorThrown);
+				}
+			});
+		},
+		eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+			$.ajax({		// Moves a playlist from one time to another
+				type: "POST", url: "/schedules/" + event.id + "/update_move",
+				dataType: "script",
+				data: {
+					daychange: dayDelta,
+					minchange: minuteDelta,
+					allday: allDay,
+					'_method': 'put',
+					timezone: $.fn.get_timezone()
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, lang_schedule_update_error, errorThrown);
+					revertFunc();
+				},
+				success: function() {
+					$('#calendar').fullCalendar('refetchEvents');
+				}
+			});
+		},
+		eventResize: function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view) {
+			$.ajax({		// changes the length of a playlist
+				type: "POST", url: "/schedules/" + event.id + "/update_runtime",
+				dataType: "script",
+				data: {
+					daychange: dayDelta,
+					minchange: minuteDelta,
+					'_method': 'put'
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, lang_schedule_update_error, errorThrown);
+					revertFunc();
+				},
+				success: function() {
+					$('#calendar').fullCalendar('refetchEvents');
+				}
+			});
+		},
+		eventClick: function(calEvent, jsEvent, view) {
+			$.ajax({		// Display form for other options
+				type: "GET", url: "/" + pageLanguage + "/schedules/" + calEvent.id + "/edit",
+				dataType: "script",
+				data: {
+					timezone: $.fn.get_timezone()
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, lang_schedule_edit_error, errorThrown);
+				}
+			});
+		}
+	});
+
+	//
+	// Resize the calendar when we change the view
+	//
+	sidebarResized = function() {
+		$('#calendar').fullCalendar('render');
+	};
+
+
+	//
+	// Default playlist update 
+	//
+	$('#default-playlist form').change(function() {
+		$(this).submit();
+	});
+
+
+	//
+	// Decide if to show the item
+	//
+	showMenu = function(e, menu) {	// Only show relavant items
+		if ($('.context-menu-selection').length > 1)
+			$('#edit-display', menu).remove();
+	};
+
+
+	//
+	// Preview button clicked
+	//
+	previewButton = function() {
+
+		if ($('.context-menu-selection').length != 1)
+			return;
+
+		window.open($('#footer-left td.new-window a').attr('href') + '?preview=1', "_blank", "toolbar=false,location=yes,status=no,directories=no,menubar=no,scrollbars=no,resizable=yes,width=800,height=600");
+	};
+});

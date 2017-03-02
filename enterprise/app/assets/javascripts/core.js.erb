@@ -1,0 +1,779 @@
+//
+// Callback functions / Hooks
+//
+var deleteItems = function(object_ids) { },
+	customPreview = function() { },
+	previewButton = function() { }, /*preview clicked*/
+	newSidebarItem = function($object) { },
+	dropDetected = function(dropspot_id, dropped_ids) { },
+	searchCompleted = function() { },
+	sidebarResized = function() { },
+	showMenu = function(e, menu) { };
+
+var menuBindings = {	// This is avaliable on all pages
+	'delete': function(t) {
+		doDelete();
+	}
+};
+
+
+//
+// Helper functions
+//
+var $preview,
+	$buffer,
+	$wrapper,
+	play_enabled = false,
+	pageLength = 50,		// 50 == the page limit defined in application controller
+	listLength = 0,
+	pageLanguage;
+
+function scalePreview() {
+	$preview.height($wrapper.height() - $buffer.width()); /*Footer-buffer is 2em wide*/
+	$buffer.height($preview.height());
+	$('#preview-area img').scale("stretch");
+	$('#preview-area video').height($preview.height());
+	if($preview.children('iframe').length > 0) {
+		var width = $preview.height() * 3;
+		if(width > $wrapper.width() / 2)
+			width = $wrapper.width() / 2;
+		$preview.children('iframe').width(width + 'px');
+	}
+}
+
+
+function defaultPreview($selected) {
+	if ($selected === undefined)
+		$selected = $();
+	
+	var len = $selected.length;
+	if (len == 0) {
+		var curr_length = $('table.list tbody tr').length;
+		if(curr_length > listLength)
+			listLength = curr_length;
+			
+		if(curr_length != listLength)
+			$('#footer-left').html('<h1>' + lang_preview_listing + ' ' + curr_length + ' ' + lang_preview_of + ' ' + listLength + ' ' + lang_preview_items + '</h1>');
+		else
+			$('#footer-left').html('<h1>' + listLength + ' ' + lang_preview_items + '</h1>');
+		$('#footer-right').html('');
+		
+		$('#preview img').attr('src', '<%= asset_path 'play-disabled.png' %>');	// play button
+		play_enabled = false;
+	}
+	else if (len > 1) {
+		$('#footer-left').html('<h1>' + len + ' ' + lang_preview_selected + '</h1>');
+		$('#footer-right').html('');
+		$preview.html("<img src='<%= asset_path 'footer/multiple.png' %>' alt='" + lang_preview_multiple + "' />");
+
+		$('#preview img').attr('src', '<%= asset_path 'play-disabled.png' %>');	// play button
+		play_enabled = false;
+		
+		scalePreview();
+	}
+}
+
+
+function doSearch() {
+	$('#search-form form').submit();
+}
+
+function enablePlay() {
+	$('#preview img').attr('src', '<%= asset_path 'play-up.png' %>');
+	play_enabled = true;
+}
+
+function get_id($row) {
+	var array = $row.attr('id').split('_');
+	return array[array.length - 1];
+}
+
+
+function error_notice(xhr, text, error) {
+	if(xhr.status == 403){
+		$.noticeAdd({
+			text: text + ': ' + error + "<br />You don't have permission to perform this action.",
+			stay: true
+		});
+	} else {
+		$.noticeAdd({
+			text: text + ': ' + error + '<br />' + lang_error_notice + '.',
+			stay: true
+		});
+	}
+}
+
+
+function secondsToTime(secs) {
+	var hours = Math.floor(secs / (60 * 60));
+
+	var divisor_for_minutes = secs % (60 * 60);
+	var minutes = Math.floor(divisor_for_minutes / 60);
+
+	var divisor_for_seconds = divisor_for_minutes % 60;
+	var seconds = Math.ceil(divisor_for_seconds);
+
+	var obj = {
+		"h": hours,
+		"m": minutes,
+		"s": seconds
+	};
+	return obj;
+}
+
+
+function setCookie(c_name,value)
+{
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate()+364);
+	document.cookie = c_name + "=" + escape(value) + ";expires=" + exdate.toUTCString() + ";path=/";
+}
+
+
+function getCookie(c_name)
+{
+	if (document.cookie.length>0)
+	{
+		c_start=document.cookie.indexOf(c_name + "=");
+		if (c_start!=-1)
+		{
+			c_start=c_start + c_name.length+1;
+			c_end=document.cookie.indexOf(";",c_start);
+			if (c_end==-1) c_end=document.cookie.length;
+				return unescape(document.cookie.substring(c_start,c_end));
+		}
+	}
+	return "";
+}
+
+
+//
+// Shows the delete dialog box, all functions should call this
+//
+function doDelete() {
+	var numSelected = $('.context-menu-selection').length; //Display a number of elements being deleted if more than 1
+	if (numSelected > 1) {
+		$('#delete-dialog > em').html(numSelected);
+		$('#delete-dialog').dialog("open");
+	} else if (numSelected > 0) {
+		$('#delete-dialog > em').html('');
+		$('#delete-dialog').dialog("open");
+	}
+}
+
+
+$(function() {
+	//
+	// Get language for requests
+	//
+	pageLanguage = $('#content').data('language');
+
+
+	//
+	// Add jquery html5 feature detection
+	//
+	var v = $('<video/>')
+
+	$.extend($.support, {
+		cache: !!window.applicationCache, 									// Tests for cache manifest support (http://www.w3.org/TR/html5/offline.html#appcache)
+		webdb: !!window.openDatabase, 										// Tests for webSQLDatabase support (http://dev.w3.org/html5/webdatabase/)
+		geolocation: !!navigator.geolocation, 									// Tests for HTML5 geolocation support (http://www.w3.org/TR/geolocation-API/)
+		history: !!(window.history && window.history.pushState && window.history.popState), // Tests for joint session history support (http://www.w3.org/TR/2009/WD-html5-20090825/history.html)
+		messaging: !!window.postMessage, 									// Tests for cross-document messaging support (http://dev.w3.org/html5/postmsg/)
+		microdata: !!document.getItems, 									// Tests for microdata support (http://www.w3.org/TR/html5/microdata.html)
+		serverSentEvents: typeof EventSource != 'undefined', 					// Tests for server-sent event support (http://dev.w3.org/html5/eventsource/)
+		localStorage: !!window.localStorage, 								// Tests for local storage support (http://dev.w3.org/html5/webstorage/#the-localstorage-attribute)
+		undo: typeof UndoManager != 'undefined', 							// Tests for undo management support (http://www.w3.org/TR/2008/WD-html5-20080122/#undo)
+		websockets: !!window.WebSocket, 									// Tests for WebSocket support (http://www.w3.org/TR/websockets/)
+		webWorker: !!window.Worker, 										// Tests for Web Worker support (http://dev.w3.org/html5/workers/)
+
+		//
+		// Video tests require the v element above
+		//
+		video: !!v[0].canPlayType,
+		h264: !!(v[0].canPlayType && v[0].canPlayType('video/mp4; codecs="avc1.42E01E, mp4a.40.2"').replace(/no/, '')),
+		ogg: !!(v[0].canPlayType && v[0].canPlayType('video/ogg; codecs="theora, vorbis"').replace(/no/, '')),
+		webm: !!(v[0].canPlayType && v[0].canPlayType('video/webm; codecs="vp8, vorbis"').replace(/no/, '')),
+	});
+
+	v.remove();
+
+	//
+	//	Image Pre-loading
+	//	Arguments are image paths relative to the current page.
+	//
+	var cache = [];
+	$.preLoadImages = function() {
+		var args_len = arguments.length;
+		for (var i = args_len; i--; ) {
+			var cacheImage = new Image();
+			cacheImage.src = arguments[i];
+			cache.push(cacheImage);
+		}
+	}
+
+	jQuery.preLoadImages('<%= asset_path 'play-down.png' %>', '<%= asset_path 'play-up.png' %>', '<%= asset_path 'footer/multiple.png' %>', '<%= asset_path 'Copy.png' %>', '<%= asset_path 'star.png' %>', '<%= asset_path 'footer/loading.gif' %>');
+
+
+	//
+	// Preview button code
+	//
+	$('#preview img').mousedown(function() {
+		if (play_enabled)
+			$(this).attr('src', '<%= asset_path 'play-down.png' %>');
+	}).mouseup(function() {
+		if (play_enabled)
+			$(this).attr('src', '<%= asset_path 'play-up.png' %>');
+	}).mouseout(function() {
+		if (play_enabled)
+			$(this).attr('src', '<%= asset_path 'play-up.png' %>');
+	}).click(function() {
+		if (play_enabled)
+			previewButton();
+	});
+
+
+	//
+	// Make sidbar re-size grips bigger for iPad (if that is what we are viewing on)
+	//
+	var footSplitterHeight = 5;
+
+	if ($.support.touch) {
+		$('#splitter').css({ width: "12px" });
+		$('#splitter').css({ "margin-right": "-7px" });
+		$('#right-content').css({ "padding-left": "12px" });
+
+		$('#footer-splitter').css({ height: "12px" });
+		$('#footer-content').css({ "padding-top": "1em" });
+		footSplitterHeight = 12;
+
+		$('table.list tbody tr').live('dblclick', function(event) {
+			doDelete();
+		});
+	}
+
+
+	//
+	//	Sidebar code (stores settings in a cookie)
+	//
+	var width = getCookie('userWidth');
+	if (width != null && width != "") {
+		if (getCookie('hideSide') != -1)			// Check if sidebar hidden
+			$('#left-wrapper').width(width + 'px');
+		else {
+			$('#left-wrapper').width('0px');
+			$("#left").hide();
+		}
+	} else {
+		setCookie('userWidth', $('#left-wrapper').width());
+	}
+
+	$('#left-wrapper').resizable({
+		handles: { n: '#splitter' },
+		start: function(event, ui) {
+			//
+			// If the sidebar is hidden we have to make sure it is un-hidden for the drag
+			//
+			if ($("#left").css("display") == 'none') {
+				$("#left").show();
+				setCookie('hideSide', 0);
+			}
+		},
+		stop: function(event, ui) {
+			//
+			// Resizabale gives a hight which we don't care for and we need to store the width
+			//
+			var wrapper = $("#left-wrapper");
+			wrapper.height('100%');
+			setCookie('userWidth', $('#left-wrapper').width()); // Store the width data in the cookie
+			sidebarResized();
+		}
+	});
+	
+	//
+	// We need to be able to select the change user drop down
+	//
+	$('#left-wrapper nav').disableSelection();
+
+	$('#splitter').bind("dblclick", function() {
+		var wrapper = $("#left-wrapper");
+
+		if (wrapper.width() > 0) {
+			wrapper.animate({ width: "0px" }, 400, sidebarResized);
+			$("#left").hide(300);
+			setCookie('hideSide', -1);
+		}
+		else {
+			$("#left").show(30);
+			wrapper.animate({ width: getCookie('userWidth') + "px" }, 600, sidebarResized);
+			setCookie('hideSide', 0);
+		}
+	}).disableSelection();
+
+
+	//
+	// Preview area code
+	//
+	$preview = $('#preview-area');
+	$buffer = $('#footer-buffer');
+	$wrapper = $('footer');
+	listLength = parseInt($('#content').data('listLength'));
+
+	//
+	//	Footer code (We have to force top to be 0px)
+	//
+	var height = getCookie('userHeight');
+	if (height != null && height != "") {
+		if (getCookie('hideFoot') != -1) {
+			$('footer').height(height + 'px');
+			$('#content').css({ 'margin-bottom': getCookie('userHeight') + "px" });
+		}
+		else {
+			$('footer').height(footSplitterHeight + 'px');
+			$('#content').css({ 'margin-bottom': footSplitterHeight + "px" });
+		}
+	} else {
+		setCookie('userHeight', $('footer').height());
+	}
+
+	$('footer').resizable({
+		handles: { n: '#footer-splitter' },
+		start: function(event, ui) {
+			//
+			// If the sidebar is hidden we have to make sure it is un-hidden for the drag
+			//
+			setCookie('hideFoot', 0);
+		},
+		resize: function(event, ui) {
+			$('#content').css({ 'margin-bottom': $(this).height() + "px" });
+			$(this).css({ 'top': "0px" });
+
+			scalePreview();
+		},
+		stop: function(event, ui) {
+			setCookie('userHeight', $wrapper.height());
+
+			$('#content').css({ 'margin-bottom': $wrapper.height() + 'px' });
+			$wrapper.css({ 'top': '0px', 'width': '100%' });
+
+			scalePreview();
+		}
+	});
+
+	$('#footer-splitter').bind("dblclick", function() {
+		var wrapper = $("footer");
+
+		if (wrapper.height() > footSplitterHeight) {
+			wrapper.animate({ height: footSplitterHeight + "px" }, 400);
+			$('#content').animate({ 'margin-bottom': footSplitterHeight + "px" }, 400);
+			setCookie('hideFoot', -1);
+		}
+		else {
+			wrapper.animate({ height: getCookie('userHeight') + "px" }, 400);
+			$('#content').animate({ 'margin-bottom': getCookie('userHeight') + "px" }, 400, null, function() {
+				defaultPreview();
+				customPreview();
+			});
+			setCookie('hideFoot', 0);
+		}
+	}).disableSelection();
+
+
+	defaultPreview($()); /*Run it on page load*/
+	scalePreview();
+	
+	
+	//
+	// Make sure the times are kept up to date
+	//
+	setInterval("$('td.time-entry').humaneDates()", 60000);
+	$('td.time-entry').humaneDates();
+	
+	
+	//
+	// Install the hooks for the list
+	//
+	$('table.list').liveList({
+		scrollingContainer: '#right',
+		searchFormSelector: '#search-form form',
+		deselectionAreas: '#right',
+		dragHandle: 'tbody tr > *:not(.sortable,.download)',
+		dragOptions: {
+			appendTo: '#dynamics',
+			containment: '#content'
+		},
+		selectedClass: 'context-menu-selection',
+		searchLoadData: function ($form, offset, orderBy, orderType) {
+						
+			//
+			// Build data for request
+			//
+			var data = {
+				offset: offset,
+				search: $('#search-form #search').val()
+			}
+
+			if (orderType == 'desc')
+				data['order_desc'] = orderBy;
+			else
+				data['order_asc'] = orderBy;
+
+			//
+			// Perform the search / data retrieval
+			//
+			$.ajax({
+				url: window.location.pathname,
+				data: data,
+				//type: "POST",
+				dataType: 'script',
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader("Accept", "text/javascript");
+					$('#searching').show();
+					$('#spin-content-loading').show();
+					
+					if (offset == 0) {
+						$('table.list tbody').empty();
+					}
+				},
+				success: function (data, status, xhr) {
+					searchCompleted();
+					$('td.time-entry').humaneDates();
+				},
+				complete: function (xhr) {
+					$('#searching').hide();
+					$('#spin-content-loading').hide();
+					$('table.list').liveList('searchComplete');
+				},
+				error: function (xhr, status, error) {
+					// TODO:: Notify user
+				}
+			});
+		},
+		selectionSelectable: function ($item) {
+			//
+			// All items are always selectable
+			// 
+			return true;
+		},
+		selectionChange: function($selected) {
+			defaultPreview($selected);
+			customPreview($selected);
+		}
+	});
+	
+	
+	//
+	//	Right click hooks
+	//
+	$('table.list').standardMenu({
+		
+		menuElements: 'tbody tr',
+		menuHotspots: 'tbody tr > *:not(.sortable,.download)',
+		menuBindings: menuBindings,
+		beforeShow: function(element) {
+			$('table.list').liveList('checkSelection', element);
+			var len = $('table.list tbody tr.context-menu-selection').length;
+			if(len > 0)
+				return true;
+			else
+				return false;
+		},
+		onShow: function(e, menu) {			
+			showMenu(e, menu);
+			return menu;
+		}
+		
+	});
+
+
+	//
+	// Pre-setup the delete dialog box
+	//	Buttons setup like this for language purposes
+	//
+	var delete_buttons = {};
+	delete_buttons[lang_yes] = function() {
+		var selected = $('.context-menu-selection');
+		var data = new Array();
+
+		$.each(selected, function(index, val) {
+			data.push(get_id($(val)));
+		});
+
+		deleteItems(data);
+		$(this).dialog("close");
+	};
+	delete_buttons[lang_cancel] = function() {
+		$(this).dialog("close");
+	};
+	
+	$('#delete-dialog').dialog({
+		autoOpen: false,
+		modal: true,
+		title: lang_del_dialog_title,
+		buttons: delete_buttons
+	});
+
+	
+
+	//
+	// Droppable updater
+	//	Override to check if created object is relavent to this view
+	//	(applies to Displays and Media views atm)
+	//
+	jQuery.fn.makeDroppable = function() {
+		$(this).droppable({
+			drop: function(event, ui) {
+				var $this = $(this),
+					$dropped = $(ui.draggable);
+				
+				if(!$dropped.hasClass('playlist-drop')) {
+					var selected = $('.context-menu-selection'),
+					data = new Array();
+					
+
+					$.each(selected, function(index, val) {
+						data.push(get_id($(val)));
+					});
+
+					
+					dropDetected(get_id($this), data);
+				} else {
+					var thedata = {};
+					if($this.hasClass('group-drop'))
+						thedata = {group_id: get_id($this)};
+					$.ajax({
+						type: "PUT", url: '/playlists/' + get_id($dropped) + '/move',
+						data: thedata,
+						error: function(xhr, textStatus, errorThrown) {
+							error_notice(xhr, lang_playlist_move_error, errorThrown);
+						},
+						success: function(data, textStatus, xhr) {
+							$('#playlist_' + get_id($dropped)).slideUp('fast', function(){
+								var item = $(this);	// Move playlist
+								var parent = item.parent();
+								
+								item.detach();
+								
+								if($this.hasClass('group-drop')) {
+									//
+									// Check display group has a playlist list
+									//
+									var playlist = $this.children('ul.playlists');
+									if(playlist.length == 0) {
+										playlist = $('<ul class="playlists" />').appendTo($this);
+									}
+									
+									item.appendTo(playlist).slideDown('fast');
+								}
+								else
+									item.appendTo('ul.playlists.main').slideDown('fast');
+									
+								if(!parent.hasClass('main') && parent.children().length == 0) {
+									parent.remove();
+								}
+							});	
+						}
+					});
+				}
+			},
+			hoverClass: 'drop-target',
+			tolerance: 'pointer'
+		});
+		return $(this);
+	}
+
+
+	//
+	// Delete selected objects
+	//
+	function checkIfDelete() {
+		try {
+			if ($('#dialog').dialog("isOpen") != true && $('.live-edit').length == 0 && $('#search-form input:focus').length == 0)
+				doDelete();
+		}catch(e) {			// jQuery UI 1.8.5 - dialog now throws errors when not instansiated
+			if ($('.live-edit').length == 0 && $('#search-form input:focus').length == 0)
+				doDelete();
+		}
+	}
+
+	$(document).bind('keyup', 'del', function() {
+		checkIfDelete();
+	});
+
+	$(document).bind('keydown', 'backspace', function(e) {
+		checkIfDelete();
+		e.stopPropagation();
+		return false;
+	});
+	
+	
+	//
+	// Ensure we can delete when we expect it
+	//
+	$('#content').click(function(){
+		if($('#search-form input:focus').length != 0)
+			$('#search-form input').blur();
+	});
+	
+
+	//
+	// Have escape remove any notices
+	//
+	$(document).bind('keyup', 'esc', function() {
+		jQuery.noticeRemove($('.notice-item-wrapper'), 400);
+	});
+
+
+	//
+	// Cancel button code for editable items
+	//
+	$('#right-cancel,#left-cancel').live("click", function() {
+		defaultPreview();
+		customPreview();
+	});
+
+
+	//
+	// Provides all the routines to publish playlists as this can happen in all views
+	//
+	function do_publish(url_link, data) {
+		if (data != "")
+			data = '&' + data;
+		data = "_method=put" + data;
+
+		$.ajax({
+			type: "POST", url: url_link,
+			data: data,
+			dataType: "script",
+			error: function(xhr, textStatus, errorThrown) {
+				error_notice(xhr, lang_playlist_pub_failed, errorThrown);
+			}
+		});
+	}
+
+	function open_pub_dialog($this, data) {
+		var pub_link = $this.attr('href');
+
+		var dialog_buttons = {};
+		dialog_buttons[lang_playlist_pub] = function() {
+			do_publish(pub_link, data);
+		};
+		dialog_buttons[lang_playlist_undo] = function() {
+			if (data == "")
+				data = "undo=true";
+			else
+				data = data + "&undo=true";
+			do_publish(pub_link, data);
+		};
+
+		$('#dialog').html('<span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 20px 0;"></span>' + lang_playlist_pub_notice).dialog({
+			resizable: false,
+			modal: true,
+			title: $this.children('img').attr('alt') + '?',
+			width: 450,
+			buttons: dialog_buttons
+		});
+	}
+
+	$('.playlist-drop a.publish').live("click", function() {	// detects the publish button
+		var data = "";
+		if ($(this).parents('.selection').hasClass('selected'))
+			data = "selected=true";
+		open_pub_dialog($(this), data); 		// Extracts the link
+
+		return false;
+	});
+	
+	
+	//
+	// Allows playlists to be dragged and dropped
+	//
+	jQuery.fn.playlistDraggable = function() {
+		$(this).draggable({
+			helper: 'clone',
+			opacity: 0.8,
+			appendTo: '#dynamics .pagelinks .playlists',
+			containment: '#content',
+			scroll: false,
+			revert: false,
+			cursor: 'default',
+			start: function(event, ui) {
+				$('#dynamics .pagelinks .playlists').find('span.selection').removeClass('selected');
+			},
+			cursorAt: {
+				left: -5,
+				top: -5
+			}
+		});
+		return $(this);
+	}
+	
+	$('.playlist-drop').playlistDraggable();
+	$('.group-drop, #playlist-title').makeDroppable().droppable("option", "accept", '.playlist-drop');
+
+
+	//
+	// Open links in new windows
+	//
+	$('.new-window a').live("click", function() {	// detects the publish button
+		window.open($(this).attr("href"), 'Camera' + new Date().getTime(), 'scrollbars=1,resizable=1,directories=0,menubar=0,status=1,titlebar=1,toolbar=0,width=800,height=600');
+
+		return false;
+	});
+
+
+
+	//
+	// User group selection
+	//
+	$( "#group_select" ).combobox({
+		source: function( request, response ) {
+			$.ajax({
+				url: "/ug.json",
+				data: {
+					search: request.term,
+					limit: 8
+				},
+				dataType: "json",
+				success: function( data ) {
+					response( $.map( data, function( item ) {
+						return {
+							label: item.description,
+							value: item.id
+						}
+					}));
+				}
+			});
+		},
+		select: function(){
+			$(this).parents('form').submit();
+		}
+	});
+	
+	//
+	// Admin group selection
+	//
+	$( "#subgroup_select" ).combobox({
+		source: function( request, response ) {
+			$.ajax({
+				url: "/ug/subgroups.json",
+				data: {
+					search: request.term,
+					limit: 8
+				},
+				dataType: "json",
+				success: function( data ) {
+					response( $.map( data, function( item ) {
+						return {
+							label: item.description,
+							value: item.id
+						}
+					}));
+				}
+			});
+		},
+		select: function(){
+			$(this).parents('form').submit();
+		}
+	});
+});

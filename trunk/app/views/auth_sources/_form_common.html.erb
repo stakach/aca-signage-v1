@@ -1,0 +1,8 @@
+
+<%= form_for(@auth_source, :as => :auth_source, :url => { :action => :create }) do |f| %>
+	
+	<%= hidden_field(:index, :index, {:value => @index}) %>
+
+	<%= render("form_#{@auth_source.type}", :f => f) %>
+
+<% end %>

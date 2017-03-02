@@ -1,0 +1,35 @@
+
+<%= form_for(playlist, {:url => playlist_path(playlist.id), :remote => true, :method => :put}) do |f| %>
+
+	<p>
+		<%= f.text_field :name %>
+	</p>
+	<p>
+		<%= f.text_area :comment %>
+	</p>
+
+	<table class="small-edit">
+		<tr>
+			<td class="desc"><%= f.label :default_timeout, "#{t(:playlist_timeout)}:" %></td>
+			<td><%= f.text_field :default_timeout %>s</td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :default_transition %>:</td>
+			<td>
+				<%= f.select :default_transition, [], {}, { :data => {:current => playlist.default_transition} } %>
+			</td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :random, 'Shuffle Playback:' %><%= mark_required(@playlist, :random) %></td>
+			<td><%= f.check_box :random %></td>
+		</tr>
+	</table>
+	
+	<div class="edit-save">
+		<%= f.submit t(:update) %>
+	</div>
+	
+<% end %>
+
+<%= render 'shared/edit_cancel' %>
+

@@ -1,0 +1,66 @@
+
+$('#dialog').html('<%= escape_javascript(render('form'))%>');
+$('#dialog select').bind('change', function() {
+	$('#dialog select').unbind('change');
+	
+	$('#visible_selection').hide();
+	var selected_value = $('#dialog select').attr('value');
+	if(selected_value == '0')
+	{
+		//
+		// URL or Image url
+		//
+		$('#hidden_plugin').remove();
+		$('#hidden_file').remove();
+		$('#hidden_url').show();
+	} else if(selected_value == '1') {
+		
+		//
+		// This is the plugin form selection
+		//
+		$('#hidden_plugin').show();
+		$('#hidden_file').remove();
+		$('#hidden_url').remove();
+		
+		//
+		// Add hooks to detect plugin selection change
+		//
+		$('#media_plugin_id').bind('change', function(){
+			$.ajax({
+				url: '<%= plugins_path %>/' + $(this).val(),
+				dataType: 'json',
+				success: function(data, textStatus, jqXHR) {
+					if(data.requires_data) {
+						if(!!data.help)
+							$('#hidden_plugin span.hidden_data label').text(data.help);
+						$('#hidden_plugin span.hidden_data').show();
+					}
+				}
+			});
+		});
+	}
+	else {
+		//
+		// File for uploading
+		//
+		$('#hidden_plugin').remove();
+		$('#hidden_file').show();
+		$('#hidden_url').remove();
+	}
+	$('#visible_selection').remove();
+});
+$('#dialog').dialog({
+	modal: true,
+	title: '<%= "#{t(:add)} #{t(:media)}" %>',
+	buttons: {
+		'<%= t(:add) %>': function() {
+			$('#dialog form').bind('ajax:success', function(){
+				$('#dialog').dialog('destroy');
+				$('#dialog').html('');
+				doSearch();
+			});
+			$('#dialog form').submit();
+		}
+	}
+});
+

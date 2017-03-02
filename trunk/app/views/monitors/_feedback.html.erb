@@ -1,0 +1,24 @@
+
+<%= form_tag '/monitors', :method => :post, :remote => true do %>
+
+	<p>
+		<%= label :feedback, :type, t(:feedback_type) %><br />
+		<%
+			options = [
+				[t(:feedback_bug), "Bug"],
+				[t(:feedback_feature), "Feature"],
+				[t(:feedback_compliment), "Compliment"]
+			]
+		%>
+		<%= select(:feedback, :type, options, {:include_blank => true}) %>
+	</p>
+	<p>
+		<%= label :feedback, :name, t(:feedback_name) %><br />
+		<%= text_field :feedback, :name %>
+	</p>
+	<p>
+		<%= label :feedback, :comment, t(:feedback_comment) %><br />
+		<%= text_area :feedback, :comment %>
+	</p>
+
+<% end %>

@@ -1,0 +1,10 @@
+
+$('#dialog').html('<%= escape_javascript(render('form'))%>');
+$('#dialog').dialog({
+	modal: true,
+	title: '<%= "#{t(:new)} #{t(:auth_source)}" %>',
+	buttons: {}
+});
+$('#dialog form').change(function() {
+	$(this).submit();
+});

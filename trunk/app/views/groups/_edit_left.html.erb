@@ -1,0 +1,18 @@
+
+<%= form_for(group, {:url => group_path(group.id), :remote => true, :method => :put}) do |f| %>
+
+	<p>
+		<%= f.text_field :name %>
+	</p>
+	<p>
+		<%= f.text_area :comment %>
+	</p>
+	
+	<div class="edit-save">
+		<%= f.submit t(:update) %>
+	</div>
+	
+<% end %>
+
+<%= render 'shared/edit_cancel' %>
+

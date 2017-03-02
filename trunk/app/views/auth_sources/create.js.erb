@@ -1,0 +1,10 @@
+
+<% if !@auth_source.new_record? %>
+	var item = $("<%= escape_javascript(render('row', :auth_source => @auth_source))%>").prependTo('table.auth_sources tbody');
+	$('#dialog').dialog("close");
+	$('#auth_source_<%= @auth_source.id %> td.time-entry').humaneDates();
+	
+	$.noticeAdd({ text: "<%= escape_javascript("#{t(:auth_source)} '#{@auth_source.name}' #{t(:created)}.") %>", stayTime: 6000 });
+<% else %>
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @auth_source)) %>", stay: true });
+<% end %>

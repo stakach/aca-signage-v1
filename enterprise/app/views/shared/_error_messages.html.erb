@@ -1,0 +1,10 @@
+<% if target.errors.any? %>
+	<div id="errorExplanation">
+		<h2><%= pluralize(target.errors.count, t(:error)) %> <%= t(:form_save_notice) %>:</h2>
+		<ul class="circle">
+			<% target.errors.full_messages.each do |msg| %>
+				<li><%= msg %></li>
+			<% end %>
+		</ul>
+	</div> 
+<% end %>

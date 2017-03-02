@@ -1,0 +1,15 @@
+
+$('#footer-right').html('<%= escape_javascript(render('displays/preview_right', :display => @display))%>');
+$('#footer-left').html('<%= escape_javascript(render('displays/preview_left', :display => @display))%>');
+$preview.html('<%= escape_javascript(image_tag('footer/display.png', :alt => @display.name, :title => @display.name)) %>');
+scalePreview();
+
+$('#footer-left .editable').click(function(){
+	$.ajax({
+		type: "GET", url: '<%= edit_display_path(@display.id) %>',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, '<%= "#{t(:display)} #{t(:edit_failed)}" %>', errorThrown);
+		}
+	});
+});

@@ -1,0 +1,14 @@
+<%= form_tag select_auth_sources_path, :method => :get, :remote => true do %>
+
+	<p>
+		<%= label :type, :type, t(:auth_sources_edit_select) %><br />
+		<%
+			options = Array.new
+			AuthSource::AUTH_TYPES.each_index do |x|
+				options << [AuthSource::AUTH_TYPES[x][0], x]
+			end
+		%>
+		<%= select(:type, :type, options, {:include_blank => true}) %>
+	</p>
+
+<% end %>

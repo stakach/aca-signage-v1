@@ -1,0 +1,2 @@
+module UgHelper
+end

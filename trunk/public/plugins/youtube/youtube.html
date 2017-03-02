@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>YouTube Player</title>
+	<script type="text/javascript" src="flash_detect_min.js"></script>
+	<style type="text/css">
+		html, body {
+			margin:0px;
+			padding:0px;
+			overflow: hidden;
+		}
+		
+		#player, html, body, iframe {
+			height:100%;
+			width:100%;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="player"></div>
+	<script>
+		var playerReadyVar = null,
+			playASAP = false,
+			videoId = null,
+			useControls = null,
+			parentWindow = null,
+			options = null,
+			connectivity = ('onLine' in window.navigator),
+			checkLoaded;
+	
+	
+		//
+		// Communication functions for the signage plugin API
+		//
+		if (window.addEventListener){
+			window.addEventListener('message', receiveMessage, false);
+		}
+		else {
+			window.attachEvent('onmessage', receiveMessage, false);
+		}
+		function receiveMessage(event) {
+			var data = event.data
+			
+			if(typeof data == "string")
+				data = JSON.parse(event.data);
+			
+			switch(data['message']){
+				case 0: 		// PLUGIN.hello == 0
+					parentWindow = event.source;
+					
+					if(connectivity) {
+						if(!navigator.onLine) {
+							parentWindow.postMessage({message: 3, reason: 'No connectivity'}, '*');	// ELEMENT.error == 3
+							break;	// We won't be loading youtube
+						}
+					}
+					
+					options = data['options'];
+					loadYouTube(data['params']);
+					break;
+				case 1: 		// PLUGIN.play == 1
+					if(!!!options || !!!options['ignore_play']) {
+						if(playerReadyVar == null)
+							playASAP = true;
+						else
+							playerReadyVar.playVideo();
+					}
+					break;
+				case 2: 		// PLUGIN.stop == 2
+					playASAP = false;
+					if(playerReadyVar != null)
+						playerReadyVar.stopVideo();
+					break;
+			}
+		}
+		
+		
+		function loadYouTube(params) {
+			//
+			// This code loads the IFrame Player API code asynchronously.
+			videoId = params;
+			if(!!options['controls'])
+				useControls = 1;
+			else
+				useControls = 0;
+			
+			var tag = document.createElement('script');
+			tag.src = "http://www.youtube.com/player_api";
+			//var firstScriptTag = document.getElementsByTagName('script')[0];
+			//firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+			
+			var headTag = document.getElementsByTagName('head')[0];
+			headTag.appendChild(tag);
+		}
+		
+		
+		// This function creates an <iframe> (and YouTube player)
+		//    after the API code downloads.
+		var player;
+		function onYouTubePlayerAPIReady() {
+			player = new YT.Player('player', {
+				videoId: videoId, 					//'hiBIT8Kgr4w', (use for testing)
+				events: {
+					'onReady': onPlayerReady,
+					'onStateChange': onPlayerStateChange,
+					'onError': function(event){
+						var reason;
+						switch(event['data']){
+							case 2:
+								reason = 'invalid video id';
+								break;
+							case 5:
+								if(FlashDetect.installed)	// Ad supported video, needs flash
+									return;
+								reason = 'flash required to watch this video';
+								break;
+							case 100:
+								reason = 'video not found';
+								break;
+							case 101:
+							case 150:
+								reason = 'embedded playback disabled for this video';
+								break;
+							default:
+								reason = 'Unknown error: ' + event['data'];
+						}
+						parentWindow.postMessage({message: 3, reason: reason}, '*');	// ELEMENT.error == 3
+					},
+					suggestedQuality: 'default' // 'highres'
+				},
+				playerVars: {
+					controls: useControls,	// User controls available?
+					rel:0,					// No related videos
+					autohide:1,				// Hide controls after playing starts
+					iv_load_policy:3,		// No annotations
+					html5:1,				// HTML5 is required for transition effects
+					suggestedQuality: 'default' // 'highres'
+				}
+			});
+		}
+
+		// The API will call this function when the video player is ready.
+		function onPlayerReady(event) {
+			//
+			// This should be called after the animation
+			//
+			playerReadyVar = event.target;
+			//playerReadyVar.setPlaybackQuality('highres');
+			if(playASAP)
+				playerReadyVar.playVideo();
+				
+			parentWindow.postMessage({message: 0}, '*');			// ELEMENT.ready == 0
+			
+			checkLoaded = setInterval(function(){
+				if(playerReadyVar.getVideoLoadedFraction() == 1.0) {
+					clearInterval(checkLoaded);
+					parentWindow.postMessage({message: 1}, '*');			// ELEMENT.loaded == 1
+				}
+			}, 10000);
+		}
+
+		// The API calls this function when the player's state changes.
+		//    The function indicates that when playing a video (state=1),
+		//    the player should play for six seconds and then stop.
+		var done = false;
+		function onPlayerStateChange(event) {
+			switch(event.data) {
+				case YT.PlayerState.PAUSED:
+					parentWindow.postMessage({message: 2}, '*');	// ELEMENT.ended == 2
+					break;
+				case YT.PlayerState.ENDED:
+					parentWindow.postMessage({message: 2}, '*');	// ELEMENT.ended == 2
+					break;
+			}
+		}
+    </script>
+
+</body>
+</html>

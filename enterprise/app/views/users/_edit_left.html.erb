@@ -1,0 +1,42 @@
+
+<%= form_for(group, {:url => user_path(user.id), :remote => true, :method => :put}) do |f| %>
+
+	<h1><%= user.name %></h1>
+	<p>
+		<% if user.system_admin %><%= t(:user_system) %><br /><% end %>
+	</p>
+	<%= f.check_box :display_alerts %> <%= f.label :display_alerts, 'Would like to recieve alerts' %><br />
+	<%= f.check_box :publisher %> <%= f.label :publisher, 'Can Publish' %><br />
+	<%= f.check_box :admin %> <%= f.label :admin, 'Administrator' %>
+	
+	<% if current_permissions.group_manager || current_permissions.domain_manager %>
+		<br /><%= f.check_box :group_manager %> <%= f.label :group_manager %>
+		<% if current_permissions.domain_manager %>
+			<br /><%= f.check_box :domain_manager %> <%= f.label :domain_manager %>
+		<% end %>
+	<% end %>
+	
+	
+	<table>
+		<tr>
+			<td class="desc">Email:</td>
+			<td><%= user.email %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= t(:user_edit_timezone) %>:</td>
+			<td><%= user.timezone %></td>
+		</tr>
+		<tr>
+			<td class="desc"><%= f.label :notes, t(:user_edit_notes) %>:</td>
+			<td><%= f.text_area :notes %></td>
+		</tr>
+	</table>
+	
+	<div class="edit-save">
+		<%= f.submit t(:update) %>
+	</div>
+	
+<% end %>
+
+<%= render 'shared/edit_cancel' %>
+

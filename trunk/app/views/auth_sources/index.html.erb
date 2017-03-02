@@ -1,0 +1,38 @@
+
+<table class="list auth_sources">
+	<thead><tr>
+		<th data-dbcol="name" class="orderable ordered desc"><%= t(:auth_sources_list_name) %></th>
+		<th data-dbcol="type" class="orderable"><%= t(:auth_sources_list_type) %></th>
+		<th data-dbcol="host" class="orderable"><%= t(:auth_sources_list_host) %></th>
+	</tr></thead>
+	<tbody>
+		
+	</tbody>
+</table>
+
+
+<%= content_for :dynamic do %>
+	
+	
+<% end %>
+
+
+<%= content_for :contextmenu do %>
+	<li id="edit-auth">
+		<%= image_tag('led-icons/textfield_rename.png', :alt => t(:edit), :title => t(:edit)) %> <%= t(:edit) %>
+	</li>
+<% end %>
+
+
+<%= content_for :preview do %>
+	<%= image_tag('footer/authentication.png', :alt => t(:auth_sources)) %>
+<% end %>
+
+
+<%= content_for :script do %>
+	
+	<%= javascript_include_tag "locales/#{I18n.locale}/auth_sources-#{I18n.locale}" %>
+	<%= javascript_include_tag "auth_sources" %>
+
+<% end %>
+

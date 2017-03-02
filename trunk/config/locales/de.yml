@@ -1,0 +1,399 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+de:
+  edit: "Bearbeiten"
+  delete: "Löschen"
+  new: "Neu"
+  update: "Aktualisieren"
+  remove: "Entfernen"
+  cancel: "Stornieren"
+  error: "fehler"
+  
+  create: "Erstellen"
+  submit: "Eintragen"
+  
+  add: "Hinzufügen"
+  added: "zusätzlich"
+  created: "erstellt"
+  update_success: "erfolgreich aktualisiert"
+  edit_failed: "bearbeiten gescheitert"
+  unable_to_create: "Kann nicht erstellt werden"
+  unable_to_add: "Nicht hinzufügen"
+  
+  say_yes: "Ja"
+  say_no: "Nein"
+  
+  #
+  # Email
+  #
+  email_feedback_from: "Rückmeldungen aus"
+  email_feedback_provided: "hat ein Feedback zur Verfügung gestellt"
+  email_display_warning: "Warnung, digitale Zeichen werden nicht angezeigt"
+  
+  #
+  # Validation
+  #
+  invalid_link_error: 'Ungültige erfordert die vollständige Anschrift: http://webseite.com/'
+  invalid_playlist_timeout: "kann nur eine ganze Zahl sein"
+  
+  
+  #
+  # Users
+  #
+  
+  user: "Benutzer"
+  users: "Benutzer"
+  
+  user_edit_admin: "Admin"
+  user_edit_administrator: "Administrator"
+  user_edit_sysadmin: "Systemadmin"
+  user_edit_sysadministrator: "Systemadministrator"
+  user_edit_authentication: "Authentifizierte gegen"
+  user_edit_auth_select: "Wählen Sie die Authentifizierung"
+  user_edit_email: "Systembetreuer Email"
+  user_edit_identifier: "Kennzeichnung"
+  user_edit_description: "Beschreibung"
+  user_edit_notes: "Notizen"
+  user_edit_timezone: "Zeitzone"
+  
+  user_auth_type: "Authentifizierungstyp"
+  
+  user_system: "System"
+  user_admin: "Admin"
+  
+  user_list_admins: "Sind Admins"
+  
+  
+  #
+  # User Displays
+  #
+  udisplay_select: "Wählen Sie Benutzer"
+  udisplay_shared: "Anzeige gemeinsam mit"
+  udisplay_share: "Empfehlen"
+  udisplay_share_error: "Kann zu teilen Anzeige"
+  udisplay_no_users: "Kein Benutzer freigeben"
+  
+  
+  #
+  # Schedules
+  #
+  schedule: "Spielplan"
+  schedules: "Termine"
+  
+  schedule_edit_all_day_event: "Ganztägig"
+  schedule_edit_starts: "Startet"
+  schedule_edit_ends: "Endet"
+  schedule_edit_repeat: "Wiederholen Sie?"
+  schedule_edit_endrepeat: "Ende wiederholen"
+  schedule_edit_exclusive: "Exklusiv"
+  schedule_edit_emergency: "Notbetätigung"
+  schedule_edit_notes: "Notizen"
+  
+  schedule_added: "Spielplan für Titelliste"
+  schedule_update_failed: "Kann Zeitplan aktualisieren"
+  schedule_removed: "erfolgreich entfernt Spielplan"
+  schedule_remove_failed: "Kann Zeitplan entfernen"
+  schedule_add_failed: "Kann Zeitplan hinzufügen"
+  
+  
+  #
+  # Playlists
+  #
+  playlist: "Play-Liste"
+  playlists: "Spielen Listen"
+  
+  playlist_timeout: "Standard-Zeitlimit"
+  
+  playlist_edit_name: "Name"
+  playlist_edit_comment: "Kommentieren"
+  playlist_list_type: "Typ"
+  playlist_edit_timeout: "Bearbeiten Auszeit"
+  
+  playlist_deleted: "Play-Liste erfolgreich gelöscht"
+  
+  publish: "Veröffentlichen"
+  is_not_published: "Play-Liste wird nicht veröffentlicht"
+  
+  playlist_not_scheduled: "Zur Zeit nicht in irgendeiner Termine gefunden"
+  playlist_displayed_in: "Anzeige in"
+  
+  
+  #
+  # Playitems
+  #
+  playitems: "Artikel"
+  playitem: "Artikel"
+  playitem_multiple_timeouts: "Bearbeiten von mehreren Auszeiten"
+  playitem_note: "Hinweis"
+  playitem_hours: " stunde"
+  playitem_min: " minute"
+  playitem_sec: " sekunden"
+  playitem_runtime: "Laufzeit"
+  playitem_multiple_update: "Mehrere Artikel aktualisiert"
+  playitem_update_failed: "Artikel-Update fehlgeschlagen"
+  
+  
+  
+  
+  #
+  # Feedback
+  #
+  feedback_type: "Feed-back geben:*"
+  feedback_bug: "Problem"
+  feedback_feature: "Wunschdenken"
+  feedback_compliment: "Kompliment"
+  feedback_name: "Name (optional)"
+  feedback_comment: "Kommentieren*"
+  feedback_sent: "Feed zurückgeschickt"
+  feedback_fail: "Beide Feedback geben und einen Kommentar erforderlich"
+  feedback_form: "Feed Back-Formular"
+  feedback_form_fail: "Kann Futter zurück senden"
+  
+  
+  
+  
+  #
+  # Medias
+  #
+  media: "Media"
+  medias: "Medias"
+  
+  media_edit_type: "Typ"
+  media_edit_path: "Web-Adresse"
+  media_edit_state: "Staat"
+  media_edit_file: "Datei"
+  media_edit_name: "Name"
+  media_edit_comment: "Kommentieren"
+  
+  media_address: "Adresse"
+  media_warning: "Warnung"
+  media_warning_message: "Ein Live-Stream wird niemals enden. Vergewissern Sie sich ein Zeitlimit gesetzt oder benutzen Sie ein exklusives Programm zu zwingen, Spieler zu aktualisieren."
+  media_download: "Download Artikel"
+  media_url: "Navigieren Sie zu url"
+  media_length: "Länge"
+  media_retry: "Der Versuch wiederholen"
+  media_do_retry: "Wiederholen Trans-Codierung"
+  media_retry_word: "Wiederholen"
+  media_video_address: "Video Adresse"
+  media_transcoding_recovered: "Transcoding erholt. Alle anhängigen Begriffe hatten ihre Umwandlungen gestartet."
+  media_conversion_complete: "konvertierung abgeschlossen"
+  media_conversion_error: "Konvertierungsfehler.<br />Bitte versuchen Sie es dann an Ihren Administrator, wenn Probleme weiterhin."
+  media_preview_fail: "Kann Vorschau zu diesem Titel in diesem Browser"
+  media_preview_not_ready: "Kann Titelvorschau"
+  
+  media_select_type: "Wählen Medientyp*"
+  media_select_web: "Web-Adresse"
+  media_select_file: "Lokale Medien Datei"
+  media_select_stream: "Streaming Video-URL"
+  media_select_image: "Ein Bild befindet sich online"
+  media_select_video: "Ein Video online verfügbar"
+  
+  media_added_successfully: "hat erfolgreich"
+  
+  media_alt_address: "Video-Adresse (alt-Format)"
+  media_image_address: "Image Adresse"
+  media_alternative: "Alternative"
+  media_not_supported: "nicht unterstützt"
+  
+  media_work_created: "Eintrag erstellt"
+  media_work_pending: "anhängig Umwandlung"
+  media_work_pending_alternative: "anhängig alternativen Format"
+  media_work_converting: "Umwandlung"
+  media_work_converting_alternative: "Umwandlung alternativen Format"
+  media_work_converted: "umgewandelt"
+  media_work_ready: "bereit"
+  media_work_error: "Fehler"
+  media_work_alternative_unavaliable: "alternativen Format fehlt"
+  
+  media_not_in_playlist: "Medien ist nicht auf eine Wiedergabeliste zugeordnet"
+  media_is_allocated_to: "Medien zuzuordnen ist"
+  
+  
+  #
+  # Layout
+  #
+  
+  really_delete: "Wirklich löschen"
+  confirm_delete: "Sind Sie sicher, möchte die"
+  selected_items: "ausgewählten Elemente löschen"
+  warning_notice: "Bearbeiten nicht verfügbar freitags 3-5pm (Wartung)"
+  transcoding_recovery: "Erholen Sie sich von Transcoding Ausfälle"
+  library: "BIBLIOTHEK"
+  settings: "EINSTELLUNGEN"
+  content_loading: "Inhalt wird geladen..."
+  feedback_line: "Probleme? Wunschliste? Komplimente?"
+  feedback: "Ihre Meinung"
+  sydney_signage: "Sydney Signage"
+  signage: "Signage"
+  searching: "Suche..."
+  preview: "Vorschau"
+  login: "Login"
+  
+  signage_solution: "Ein Digital-Signage-Lösung"
+  browse_media: "Stöbern Medien"
+  view_displays: "View zeigt"
+  
+  form_save_notice: "verboten diesem Datensatz nicht gespeichert werden"
+  
+  
+  #
+  # Groups
+  #
+  
+  group: "Spielplan"
+  groups: "Termine"
+  
+  groups_default_playlist: "Standard Play-Liste:"
+  
+  groups_key_emergency: "Emergency"
+  groups_key_exclusive: "Exklusiv"
+  groups_key_shared: "Gemeinsam mit anderen geplanten Inhalt"
+  
+  groups_deleted: "Spielplan erfolgreich gelöscht"
+  
+  groups_edit_name: "Name"
+  groups_edit_comment: "Kommentieren"
+  
+  
+  #
+  # Displays
+  #
+  
+  display: "Anzeige"
+  displays: "Zeigt"
+  
+  displays_share: "Empfehlen"
+  
+  displays_list_online: "Online"
+  displays_list_shared: "Shared"
+  
+  displays_edit_building: "Bauen"
+  displays_edit_location: "Ort"
+  displays_edit_camera: "IP-Kamera"
+  displays_edit_name: "Name"
+  displays_edit_comment: "Kommentieren"
+  displays_edit_link: "Link"
+  
+  display_not_in_schedule: "in keiner Zeitpläne"
+  display_shared_between: "geteilt zwischen"
+  display_no_playlist: "Keine Playlist ausgewählt"
+  
+  in: "in"	# used in display helper
+  
+  display_no_use: "Anzeige nicht in Gebrauch"
+  display_online: "Anzeige online"
+  display_unknown: "Display könnte offline oder Neustart werden"
+  display_offline: "Anzeige Fehler oder offline"
+  
+  display_monitored: "überwacht"
+  display_start: "Beginn"
+  display_end: "Ende"
+  
+  
+  #
+  # Converters
+  #
+
+  converter: "Konverter"
+  converters: "Konverter"
+
+  converters_edit_command: "Befehl"
+  converters_edit_applies: "Gilt für"
+  converters_edit_converts: "Konvertiert in"
+  converters_edit_enabled: "Aktiviert"
+  converters_edit_description: "Beschreibung"
+  
+  
+  #
+  # Auth sources translations
+  #
+  
+  authentication_servers: "Authentifizierungsserver"
+  authentication: "Authentifizierung"
+  
+  auth_source: "Authentifizierungsquelle"
+  auth_sources: "Anmeldequellen"
+  
+  auth_sources_list_name: "Name"
+  auth_sources_list_type: "Typ"
+  auth_sources_list_host: "Gastgeber"
+  
+  auth_sources_preview_title: "LDAP Attribute"
+  
+  auth_sources_edit_first_name: "Vorname"
+  auth_sources_edit_last_name: "Nachname"
+  auth_sources_edit_login: "Login"
+  auth_sources_edit_email: "Email"
+  auth_sources_edit_group: "Gruppenmitgliedschaft"
+  auth_sources_edit_dn: "Basis DN"
+  auth_sources_edit_host: "Gastgeber"
+  auth_sources_edit_port: "Hafen"
+  auth_sources_edit_secured: "Gesichert"
+  auth_sources_edit_account: "Konto"
+  auth_sources_edit_account_pass: "Konto-Passwort"
+  
+  auth_sources_edit_select: "Wählen Authentifizierungstyp:"
+  
+  auth_sources_change_password: "Passwort ändern?"
+  
+  
+  #
+  # Active record
+  #
+  activerecord:
+    errors:
+      messages:
+        inclusion: "ist kein gültiger Wert"
+        exclusion: "ist nicht verfügbar"
+        invalid: "ist nicht gültig"
+        confirmation: "stimmt nicht mit der Bestätigung überein"
+        accepted: "muss akzeptiert werden"
+        empty: "muss ausgefüllt werden"
+        blank: "muss ausgefüllt werden"
+        too_long: "ist zu lang (nicht mehr als {{count}} Zeichen)"
+        too_short: "ist zu kurz (nicht weniger als {{count}} Zeichen)"
+        wrong_length: "hat die falsche Länge (muss genau {{count}} Zeichen haben)"
+        taken: "ist bereits vergeben"
+        not_a_number: "ist keine Zahl"
+        not_a_date: "is kein gültiges Datum"
+        greater_than: "muss größer als {{count}} sein"
+        greater_than_or_equal_to: "muss größer oder gleich {{count}} sein"
+        equal_to: "muss genau {{count}} sein"
+        less_than: "muss kleiner als {{count}} sein"
+        less_than_or_equal_to: "muss kleiner oder gleich {{count}} sein"
+        odd: "muss ungerade sein"
+        even: "muss gerade sein"
+        greater_than_start_date: "muss größer als Anfangsdatum sein"
+        not_same_project: "gehört nicht zum selben Projekt"
+        circular_dependency: "Diese Beziehung würde eine zyklische Abhängigkeit erzeugen"
+        cant_link_an_issue_with_a_descendant: "Ein Ticket kann nicht mit einer ihrer Unteraufgaben verlinkt werden"
+
+    attributes:
+      playlist:
+        default_timeout: "Standard-Zeitlimit"
+        name: "name"
+      media:
+        alt_path: "alternativen Adresse"
+        path: "Web-Adresse"
+        name: "Name"
+      display:
+        name: "name"
+        link: "link"
+      display_group:
+        name: "name"
+      auth_source:
+        name: "name"
+        host: "gastgeber"
+        port: "hafen"
+        attr_login: "login"
+      user:
+        identifier: "bezeichner"
+        auth_source: "authentifizierungsquelle"
+        email: "email"
+      file_conversion:
+        applies_to: "gilt für"
+        command: "befehl"
+        description: "beschreibung"
+        accepts_file: "akzeptiert Datei"
+        

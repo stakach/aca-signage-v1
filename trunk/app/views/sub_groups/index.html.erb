@@ -1,0 +1,31 @@
+
+<table class="list subgroups">
+	<thead><tr>
+		<th data-dbcol="groups.description" class="orderable">Description</th>
+		<th data-dbcol="groups.domain" class="orderable">Domain</th>
+		<th data-dbcol="groups.identifier" class="orderable">Identifier</th>
+		<th data-dbcol="groups.created_at" class="orderable ordered desc">Added</th>
+	</tr></thead>
+	<tbody>
+		
+	</tbody>
+</table>
+
+
+<%= content_for :dynamic do %>
+	
+	
+<% end %>
+
+<%= content_for :contextmenu do %>
+	<li id="edit-subgroup">
+		<%= image_tag('led-icons/textfield_rename.png', :alt => t(:edit), :title => t(:edit)) %> <%= t(:edit) %>
+	</li>
+<% end %>
+
+
+<%= content_for :preview do %>
+	<%= image_tag('footer/sub_groups.png', :alt => 'Groups') %>
+<% end %>
+
+

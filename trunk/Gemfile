@@ -1,0 +1,87 @@
+source 'http://rubygems.org'
+
+gem 'rails'
+
+# Bundle edge Rails instead:
+# gem 'rails',     :git => 'git://github.com/rails/rails.git'
+
+
+#
+# External dependencies
+#
+gem 'pg'							# Preferred database
+gem 'delayed_job'					# Background tasks
+gem 'delayed_job_active_record'				# AR Support for above
+gem 'jquery-rails'					# Jquery (we use our own jquery ui)
+gem 'detect_timezone_rails'				# Detect the users timezone in JS for calendar
+gem 'remotipart'					# Simple ajax file upoads
+gem 'net-ldap'						# LDAP integration
+gem 'closure_tree'					# Our tree gem (will manage user groups)
+gem 'workflow'						# Manages conversion state
+gem 'airbrake'						# Exception Management
+
+gem 'streamio-ffmpeg', :git => 'git://github.com/streamio/streamio-ffmpeg.git'		# FFMPEG wrapper
+gem 'streamio-magick', :git => 'git://github.com/streamio/streamio-magick.git'		# Image Magick wrapper
+
+
+platforms :mswin, :mingw do
+    #gem  'win32console', '1.3.0'
+    gem  'win32-process'			# Required for terminating hung processes on Windows
+end
+
+#gem 'cancan'						# Authorisation Management (Too complicated to use this)
+
+
+# To use ActiveModel has_secure_password
+gem 'bcrypt-ruby', '>= 3.0.0'
+
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
+gem 'omniauth-google-apps'
+gem 'omniauth-identity'
+gem 'omniauth-openid'
+
+
+
+#
+# For compiling assets
+#
+gem 'therubyracer', :platform => :ruby
+
+
+# 
+# ACA Dependencies
+#
+gem 'advanced_auth', :git => 'git://github.com/stakach/advanced-auth.git'
+gem 'resolute', :git => 'git://github.com/stakach/Resumable-Uploads.git'
+
+
+
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails'
+  gem 'coffee-rails'
+  gem 'uglifier'
+end
+
+group :development do
+	gem 'eventmachine', '>= 1.0.0.rc.4'
+	gem 'thin'
+end
+
+
+# Use unicorn as the web server
+# gem 'unicorn'
+
+# Deploy with Capistrano
+# gem 'capistrano'
+
+# To use debugger
+# gem 'ruby-debug19', :require => 'ruby-debug'
+
+group :test do
+  # Pretty printed test output
+  gem 'turn', :require => false
+end

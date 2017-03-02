@@ -1,0 +1,8 @@
+
+<% if !@invite.new_record? %>
+	$('#dialog').dialog("close");
+	
+	$.noticeAdd({ text: "User invite sent", stayTime: 6000 });
+<% else %>
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @invite)) %>", stay: true });
+<% end %>

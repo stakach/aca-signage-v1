@@ -1,0 +1,20 @@
+<div id="playlist_prev_left">
+	<br />
+	<p class="editable" style="color:black;"><%= playlist.name %></p>
+	<%= simple_format(playlist.comment, :class => 'editable') %>
+
+	<table>
+		<tr>
+			<td class="desc"><%= t(:playlist_timeout) %>:</td>
+			<td class="editable"><%= playlist.default_timeout %>s</td>
+		</tr>
+		<tr>
+			<td class="desc">Default Transition:</td>
+			<td class="editable" id="playlists_default_transition" data-current="<%= @playlist.default_transition %>"></td>
+		</tr>
+		<tr>
+			<td class="desc">Playback Shuffled:</td>
+			<td class="editable"><%= playlist.random ? 'Yes' : 'No' %></td>
+		</tr>
+	</table>
+</div>

@@ -1,0 +1,10 @@
+
+<% if !@converter.new_record? %>
+	var item = $("<%= escape_javascript(render('row', :converter => @converter))%>").prependTo('table.converters tbody');
+	$('#dialog').dialog("close");
+	$('#converter_<%= @converter.id %> td.time-entry').humaneDates();
+	
+	$.noticeAdd({ text: "<%= escape_javascript("#{t(:converter)} '#{@converter.description}' #{t(:added)}.") %>", stayTime: 6000 });
+<% else %>
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @converter)) %>", stay: true });
+<% end %>

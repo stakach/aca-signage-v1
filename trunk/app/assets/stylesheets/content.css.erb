@@ -1,0 +1,475 @@
+
+
+
+/* Table Styles  ----------------------------*/
+
+
+table.list { border: 1px solid #e4e4e4;  border-collapse: collapse; width: 100%; margin-bottom: 4px; }
+table.list th {  background-color:#EEEEEE; padding: 4px; white-space:nowrap; }
+table.list td { vertical-align: top; }
+table.list td.id { width: 2%; text-align: center;}
+table.list td.checkbox {
+	width: 15px; padding: 0px;
+	padding: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+table.list td.buttons { width: 15%; white-space:nowrap; text-align: right; }
+table.list td.buttons a { padding-right: 0.6em; }
+table.list caption { text-align: left; padding: 0.5em 0.5em 0.5em 0; }
+
+table.list { font-size:80% }
+table td {padding:2px;}
+table p {margin:0;}
+
+td.center {text-align:center;}
+td.right {text-align:right;}
+td.time-entry { text-align:center; white-space: nowrap; }
+
+/*
+	Alternating row colours
+*/
+table.list tbody tr:nth-child(odd)    { background:rgba(246,247,248,0.8); }
+table.list tbody tr:nth-child(even)    { background:rgba(255,255,255,0.8); }
+table.list tbody tr:hover { background:rgba(255,255,170,0.8); }
+
+
+table.list tbody td, table.list tbody tr:hover td {
+	border-left: solid 1px #d7d7d7;
+	border-right: solid 1px #d7d7d7;
+	padding: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+table.list thead th {
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: #d7d7d7;
+    border-right-color: #d7d7d7;
+    border-left-color: #d7d7d7;
+    border-bottom-color: #999999;
+}
+
+
+table.list {
+	border-bottom: solid 2px #D6D6D6;
+}
+
+table.list th {
+	font-weight:bold;
+	text-align: center;
+	text-shadow: #FFFFFF 0px 1px 0px;
+}
+
+
+/*
+	Sortable menu items
+*/
+table.list th.ordered { padding-left: 24px; background-position: 8px 50%; background-repeat: no-repeat; }
+table.list th.ordered.asc  { background-image: url(<%= asset_path 'search/sort_asc.png' %>); }
+table.list th.ordered.desc { background-image: url(<%= asset_path 'search/sort_desc.png' %>); }
+
+
+tr.media td.file-type, tr.media td.state, tr.user td.description, tr.user td.admin { text-align: center; }
+
+td.online { text-align:center; }
+td.online span {
+	width: 3em;
+	height: 1em;
+	display:inline-block;
+	-webkit-border-radius: 0.5em;
+	-moz-border-radius: 0.5em;
+	-ms-border-radius: 0.5em;
+	-o-border-radius: 0.5em;
+	border-radius: 0.5em;	/*CSS 3 Element*/
+}
+td.online .red {
+	background-color: red;
+}
+td.online .orange {
+	background-color: orange;
+}
+td.online .green {
+	background-color: #00FF00;
+}
+td.online .black {
+	background-color: black;
+}
+
+tr.download {
+	padding-right:1.5em !important;
+}
+
+
+.context-menu-selection { background-color:#507AAA !important; color:#f8f8f8 !important; }
+.context-menu-selection:hover { background-color:#507AAA !important; color:#f8f8f8  !important; }
+
+
+/*Error indicator*/
+.transerror .state {
+	font-weight: bold;
+	color: red;
+	background-color: #FFCCCC;
+}
+
+.partialerror .state {
+	color: red;
+	background-color: #FFDDDD;
+}
+
+
+/* HTML5 Uploads Progress bar animation
+.ui-progressbar-value {
+	background-image: url(<%= asset_path 'pbar-ani.gif' %>);
+}
+*/
+
+.ui-progressbar {
+	height: 22px !important;
+}
+
+
+/* iPad styles */
+
+* {
+	-webkit-touch-callout: none;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+
+/* Table Styles END ----------------------------*/
+
+
+
+/* Calendar + Draggable playlist styles ----------------------------*/
+
+#dynamics ul.pagelinks ul li {
+	z-index: 400;
+}
+
+#dynamics ul.pagelinks ul li span.selection {
+	margin: 0;
+	padding-right: 3em;
+	border-top: none;
+	border-bottom: none;
+	background-color: #FFEAC0;
+	
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	-ms-border-radius: 10px;
+	-o-border-radius: 10px;
+	border-radius: 10px;	/*CSS 3 Element*/
+}
+
+#dynamics ul.pagelinks ul li span.options {
+	display: none !important;
+}
+
+/* These are calendar events: */
+
+#colour-key {
+	padding-top: 1em;
+}
+
+#colour-key span {
+	font-size: 80%;
+}
+
+#colour-key .block {
+	height:1em;
+	width: 1em;
+	display:inline-block;
+	margin-right: 0.5em;
+	margin-left: 1em;
+	-webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+	-ms-border-radius: 1em;
+	-o-border-radius: 1em;
+	border-radius: 1em;	/*CSS 3 Element*/
+}
+
+#red {
+	background-color: red;
+}
+
+#orange {
+	background-color: orange;
+}
+
+#blue {
+	background-color: blue;
+}
+
+
+/* Calendar + Draggable playlist styles END ----------------------------*/
+
+
+
+/* right banner Content ----------------------------*/
+
+
+#default-playlist {
+	text-align: center;
+	font-weight:bold;
+	margin-top: -1.5em;
+}
+
+
+#right-banner {
+	margin: 1.5em;
+	margin-right: 1.1em;
+	margin-left: 1.1em;
+
+	/*height: 20em;*/
+	width: auto;
+	
+	border: 2px solid #A4A5A4;
+
+	background-image:url(<%= asset_path 'banner_back.png' %>);
+	background-repeat:repeat-x;
+	background-position:bottom left;
+	padding: 1em;
+	padding-top: 2.5em;
+	
+	
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	-ms-border-radius: 10px;
+	-o-border-radius: 10px;
+	border-radius: 10px;	/*CSS 3 Element*/
+	
+	-webkit-box-shadow: 0 0 6px #888;
+	-moz-box-shadow: 0 0 6px #888;
+	-ms-box-shadow: 0 0 6px #888;
+	-o-box-shadow: 0 0 6px #888;
+	box-shadow: 0 0 6px #888;
+}
+
+
+#calendar-wrap {
+
+	height:100%;
+	width:100%;
+
+}
+
+
+/* right banner END ----------------------------*/
+
+
+
+/* Footer Content ----------------------------*/
+
+footer {
+	font-size: 0.88em;
+	color: #1E395B;
+}
+
+footer h1 {
+	font-size: 1em;
+	color: black;
+	margin-bottom: 0.2em;
+}
+
+footer table {
+	margin-top: 1em;
+	margin-left: 3em;
+}
+
+footer table td.desc, footer table th.desc {
+	text-align: right;
+	padding-right: 0.5em;
+	color: #906790;
+}
+
+footer table th.desc {
+	text-align: center;
+	padding-bottom: 0.2em;
+	padding-right: 0em;
+}
+
+
+/* These are for editable item support */
+footer td, footer h1, footer p {
+	padding: 1px;
+	padding-bottom: 2px;
+	border: 1px solid #F1F5FB;	/* Same as background colour */
+}
+
+footer .editable:hover {
+	border: 1px solid #919397;
+}
+
+.edit-save, .edit-cancel {
+	float:left;
+	padding:1em; 
+	padding-left: 4em;
+}
+
+.edit-cancel {
+	padding-left: 0;
+	margin-left: -0.5em;
+}
+/*----------------------------*/
+
+#preview-wrapper {
+	float:left;
+}
+
+#preview-area iframe {
+	height:100%;
+	width:100%;
+	min-width: 10em!important;
+}
+
+#footer-buffer {
+	float:left;
+	height: 1em;
+	width: 2em;
+}
+
+#footer-data-wrapper {
+	width:auto;
+}
+
+#footer-right {
+	padding: 0.5em;
+	float: left;
+}
+
+#footer-left-wrapper {
+	height: 100%;
+	min-width: 25%;
+	max-width: 40%;
+	float:left;
+}
+
+#footer-left {
+	padding: 0.5em;
+}
+
+#footer-left p, #footer-right p {
+	text-indent:1em;
+}
+
+
+/* Footer Content END ----------------------------*/
+
+
+/* Form styles */
+
+
+#dialog textarea, footer textarea {
+	height: 5em;
+	width: 20em;
+	font-size: 13px;
+}
+
+#dialog input, footer input {
+	font-size: 13px;
+	width: 20em;
+}
+
+#dialog input[type='checkbox'] {
+	width: 2em;
+}
+
+#dialog p {
+	margin-top: 0.5em;
+}
+
+#dialog select, footer select {
+	font-size: 13px;
+	display: block;
+	min-width: 20em;
+}
+
+
+
+.small-edit input {		/*Footer editing*/
+	font-size: 13px;
+	width: 5em;
+}
+
+.nano-edit input {		/*Footer editing*/
+	font-size: 15px;
+	width: 3em;
+	text-align: center;
+}
+
+
+footer input[type='submit'] {
+	width: auto;
+}
+
+
+
+
+
+/* publish icon styles */
+
+.playlist-drop .publish {
+	display:none!important;
+}
+
+.playlist-drop .show {
+	display:inline!important;
+	margin-right: 22px;
+}
+
+.drop-target .show {
+	display:inline!important;
+	margin-right: 21px;
+}
+
+span.selected .show {
+	margin-right: 0;
+}
+
+
+
+
+
+/* Combo box styles */
+
+#left-content div.ui-widget, #dialog div.ui-widget  {	/* User select box */
+	text-align: center;
+	margin-bottom: 0.8em;
+	margin-left: -2em;
+}
+
+#left-content div.ui-widget label {
+	display: inline-block;
+	min-width: 6em;
+}
+
+#left-content  .ui-combobox {
+	z-index: 300;
+}
+
+.ui-autocomplete-loading {
+	background-image:url('<%= asset_path 'ajax-loader.gif' %>');
+	background-repeat:no-repeat;
+	background-position:right center;
+}
+
+.ui-combobox {
+	position: relative;
+	display: inline-block;
+}
+
+
+.ui-combobox-toggle {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin-left: -1px;
+	padding: 0;
+	/* adjust styles for IE 6/7 */
+	*height: 1.7em;
+	*top: 0.1em;
+}
+.ui-combobox-input {
+	margin: 0;
+	padding: 0.2em;
+}

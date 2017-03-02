@@ -1,0 +1,76 @@
+
+<%= form_for(@schedule) do |f| %>
+
+	<br />
+
+	<table>
+		<tr>
+			<td><%= f.check_box :all_day %></td>
+			<td><%= f.label :all_day, t(:schedule_edit_all_day_event) %><%= mark_required(@schedule, :all_day) %></td>
+		</tr>
+	</table>
+	
+	<br />
+	
+	<p class="indatetime">
+		<%= f.label :do_start, "Starts" %><br />
+		<%= f.text_field :do_start, :value => (@schedule.sync_all_zones ? @schedule.do_start.in_time_zone(@zone) : @schedule.do_start).strftime('%Y-%m-%d %I:%M %p').downcase %>
+	</p>
+	
+	<p class="indatetime">
+		<%= f.label :do_end, "Ends" %><br />
+		<%= f.text_field :do_end, :value => (@schedule.sync_all_zones ? @schedule.do_end.in_time_zone(@zone) : @schedule.do_end).strftime('%Y-%m-%d %I:%M %p').downcase %><br />
+	</p>
+	
+	<br />
+	
+	<p id="visible_selection">
+		<%= f.label :repeat_period, "Repeat?" %><%= mark_required(@schedule, :repeat_period) %>
+		<%
+			options = Array.new
+			Schedule::REPEAT_TYPES.each_index do |x|
+				options << [Schedule::REPEAT_TYPES[x][0], x]
+			end
+		%>
+		<%= f.select(:repeat_period, options) %>
+	</p>
+	
+	<p id="hidden_repeat" class="indatetime" <% if @schedule.repeat_period == 0 %>style="display:none;"<% end %>>
+		<%= f.label :end_repeat, t(:schedule_edit_endrepeat) %> (optional)<br />
+		<% if @schedule.end_repeat.nil? %>
+			<%= f.text_field :end_repeat %>
+		<% else %>
+			<%= f.text_field :end_repeat, :value => (@schedule.sync_all_zones ? @schedule.end_repeat.in_time_zone(@zone) : @schedule.end_repeat).strftime('%Y-%m-%d %I:%M %p').downcase %>
+		<% end %>
+	</p>
+	
+	<br />
+	
+	<table>
+		<tr>
+			<td><%= f.label :exclusive, t(:schedule_edit_exclusive) %><%= mark_required(@schedule, :exclusive) %></td>
+			<td><%= f.check_box :exclusive %></td>
+		</tr>
+		<% if @user_is_admin %>
+			<tr>
+				<td><%= f.label :emergency, t(:schedule_edit_emergency) %><%= mark_required(@schedule, :emergency) %></td>
+				<td><%= f.check_box :emergency %></td>
+			</tr>
+		<% end %>
+		<tr>
+			<td><%= f.label :sync_all_zones, 'Sync to my time zone' %><%= mark_required(@schedule, :sync_all_zones) %></td>
+			<td><%= f.check_box :sync_all_zones %></td>
+		</tr>
+	</table>
+	
+	<p>
+		<%= f.label :notes, t(:schedule_edit_notes) %><br />
+		<%= f.text_area :notes %>
+	</p>
+	
+	<p id="hidden_fields" style="display:none;">
+		<%= f.text_field :playlist_id %>
+		<%= f.text_field :display_group_id %>
+	</p>
+	
+<% end %>

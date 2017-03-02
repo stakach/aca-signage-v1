@@ -1,0 +1,3 @@
+
+$('#footer-data-wrapper').html('<%= escape_javascript(render("edit_#{@auth_source.type}", :auth_source => @auth_source))%>');
+$('#auth_source_name').focus();

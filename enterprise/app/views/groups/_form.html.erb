@@ -1,0 +1,15 @@
+<%= form_for(@group, :url => { :controller => "groups" }) do |f| %>
+
+	<p>
+		<%= f.label :name, t(:groups_edit_name) %><%= mark_required(@group, :name) %><br />
+		<%= f.text_field :name %>
+	</p>
+	<p>
+		<%= f.label :comment, t(:groups_edit_comment) %><%= mark_required(@group, :comment) %><br />
+		<%= f.text_area :comment %>
+	</p>
+	<p>
+		<%= render 'playlist_dropdown', :f => f %>
+	</p>
+
+<% end %>

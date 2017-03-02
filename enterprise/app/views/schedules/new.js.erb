@@ -1,0 +1,24 @@
+<%= render('new_or_edit') %>
+
+
+$('#dialog').dialog({
+	modal: true,
+	title: '<%= t(:schedule) %> <%= @schedule.playlist.name %>',
+	buttons: {
+		'<%= t(:add) %>': function() {
+			$.ajax({
+				type: "POST",
+				dataType: 'script',
+				url: $('#dialog form').attr('action'),
+				data: $('#dialog form').serialize() + '&timezone=' + encodeURIComponent($.fn.get_timezone()),
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, '<%= t(:schedule_add_failed) %>', errorThrown);
+				}
+			});
+		}
+	},
+	close: function(event, ui) {
+		$('#dialog').empty();
+	}
+});
+

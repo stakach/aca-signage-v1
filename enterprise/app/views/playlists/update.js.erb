@@ -1,0 +1,14 @@
+
+<% if @saved %>
+
+	$.noticeAdd({ text: "<%= "#{t(:playlist)} #{t(:update_success)}" %>.", stayTime: 6000 });
+	$('#playlist_<%= @playlist.id %>').replaceWith('<%= escape_javascript(render('layouts/content/playlist', :playlist => @playlist))%>');
+	
+	$('#footer-left').empty();
+	doSearch();
+
+<% else %>
+
+	$.noticeAdd({ text: "<%= escape_javascript(render('shared/error_messages', :target => @playlist)) %>", stay: true });
+
+<% end %>

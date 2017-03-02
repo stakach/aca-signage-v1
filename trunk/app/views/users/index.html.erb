@@ -1,0 +1,39 @@
+
+<table class="list users">
+	<thead><tr>
+		<th data-dbcol="users.firstname" class="orderable">Name</th>
+		<th data-dbcol="users.email" class="orderable">Email</th>
+		<th data-dbcol="user_groups.permissions" class="orderable">Permissions</th>
+		<th data-dbcol="users.created_at" class="orderable ordered desc"><%= t(:added).capitalize %></th>
+	</tr></thead>
+	<tbody>
+		
+	</tbody>
+</table>
+
+
+<%= content_for :dynamic do %>
+
+
+<% end %>
+
+
+<%= content_for :contextmenu do %>
+	<li id="edit-user">
+		<%= image_tag('led-icons/textfield_rename.png', :alt => t(:edit), :title => t(:edit)) %> <%= t(:edit) %>
+	</li>
+<% end %>
+
+
+<%= content_for :preview do %>
+	<%= image_tag('footer/users.png', :alt => t(:users)) %>
+<% end %>
+
+
+<%= content_for :script do %>
+
+	<%= javascript_include_tag "locales/#{I18n.locale}/users-#{I18n.locale}" %>
+	<%= javascript_include_tag "users" %>
+
+<% end %>
+

@@ -1,0 +1,38 @@
+
+<%= form_for(@media, :html => { :multipart => true }, :remote => true) do |f| %>
+
+	<p id="visible_selection">
+		<%= f.label :media_type, t(:media_select_type) %><br />
+		<%= f.select(:media_type, Media::ADD_OPTIONS.map {|type| [t(type[0]), type[1]]}, {:include_blank => true}) %>
+	</p>
+
+	
+	<p id="hidden_file" style="display:none;">
+		<%= f.label :uploaded_file, t(:media_edit_file) %>*<br />
+		<%= f.file_field :uploaded_file %>
+	</p>
+	
+	
+	<p id="hidden_url" style="display:none;">
+		<%= f.label :url_path, t(:media_select_web) %>*<br />
+		<%= f.text_field :url_path %>
+	</p>
+	
+	<p id="hidden_plugin" style="display:none;">
+		<%= f.label :plugin_id, 'Select Plugin' %>*<br />
+		<%= f.select(:plugin_id, Plugin.all.map {|plug| [plug.name, plug.id]}, {:include_blank => true}) %><br />
+		<span style="display:none;" class="hidden_data">
+			<%= f.label :file_path, 'Plugin Data (required)' %><br />
+			<%= f.text_field :file_path %>
+		</span>
+	</p>
+
+	<p>
+		<%= f.label :name, t(:media_edit_name) %><br />
+		<%= f.text_field :name %>
+	</p>
+	<p>
+		<%= f.label :comment, t(:media_edit_comment) %><br />
+		<%= f.text_area :comment %>
+	</p>
+<% end %>

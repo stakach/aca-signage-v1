@@ -1,0 +1,6 @@
+
+$('table.subgroups tbody').append(
+<% @subgroups.each do |group| %>
+	"<%= escape_javascript(render('row', :group => group))%>" + 
+<% end %>
+"");

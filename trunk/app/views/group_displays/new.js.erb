@@ -1,0 +1,75 @@
+
+
+<% if current_user.user_groups.limit(2).count > 1 || current_group.children.limit(2).count >= 1 %>
+
+	$('#dialog').html('<%= escape_javascript(render('form'))%>');
+
+
+	$('#dialog').dialog({
+		modal: true,
+		title: '<%= t(:udisplay_share) %> "<%= @groupdisplay.display.name %>"',
+		buttons: {
+			'<%= t(:udisplay_share) %>': function() {
+				$.ajax({
+					type: "POST",
+					dataType: 'script',
+					url: $('#dialog form').attr('action'),
+					data: $('#dialog form').serialize(),
+					error: function(xhr, textStatus, errorThrown) {
+						error_notice(xhr, '<%= t(:udisplay_share_error) %>', errorThrown);
+					}
+				});
+			}
+		},
+		close: function(event, ui) {
+			$('#dialog').empty();
+		}
+	});
+	
+	$( "#dialog #group_display_group_id" ).combobox({
+		source: function( request, response ) {
+			$.ajax({
+				url: "/ug.json",
+				data: {
+					search: request.term,
+					limit: 8
+				},
+				dataType: "json",
+				success: function( data ) {
+					response( $.map( data, function( item ) {
+						return {
+							label: item.description,
+							value: item.id
+						}
+					}));
+				}
+			});
+		}
+	});
+	
+	$( "#dialog #group_display_subgroup_id" ).combobox({
+		source: function( request, response ) {
+			$.ajax({
+				url: "/ug/subgroups.json",
+				data: {
+					search: request.term,
+					limit: 8
+				},
+				dataType: "json",
+				success: function( data ) {
+					response( $.map( data, function( item ) {
+						return {
+							label: item.description,
+							value: item.id
+						}
+					}));
+				}
+			});
+		}
+	});
+
+<% else %>
+
+	$.noticeAdd({ text: "<%= escape_javascript("#{t(:udisplay_no_users)}...") %>", stayTime: 6000 });
+
+<% end %>

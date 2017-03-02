@@ -1,0 +1,43 @@
+
+<h1 class="editable"><%= display.name %></h1>
+<%= simple_format(display.comment, :class => 'editable') %>
+
+<table>
+	<tr>
+		<td class="desc"><%= t(:displays_edit_link) %>:</td>
+		<td class="new-window"><%= link_to(*gen_display_link(display), :data => {:confirm => 'Are you sure you want to follow this link? To preview a display please press the play button.'}) %> or 
+			<a href="#" onclick="$(this).parent().html($('<textarea />').val('<object width=\'400px\' height=\'400px\' data=\'<%= gen_display_link(display)[1] %>\'></object>')); return false;" >Embed code</a></td>
+	</tr>
+	<tr>
+		<td class="desc">Fixed Display:</td>
+		<td class="editable"><%= display.physical ? 'Yes' : 'No' %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:displays_edit_building) %>:</td>
+		<td class="editable"><%= display.building %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:displays_edit_location) %>:</td>
+		<td class="editable"><%= display.location %></td>
+	</tr>
+	<% if !display.link.nil? && display.link != '' %>
+		<tr>
+			<td class="desc"><%= t(:displays_edit_camera) %>:</td>
+			<td class="new-window"><%= link_to(display.link, display.link) %></td>
+		</tr>
+	<% end %>
+	<tr>
+		<td class="desc"><%= t(:user_edit_timezone) %>:</td>
+		<td class="editable"><%= display.timezone %></td>
+	</tr>
+	<tr>
+		<td class="desc"><%= t(:display_monitored) %>:</td>
+		<td class="editable">
+			<% if display.notify_offline %>
+				<%= t(:say_yes) %> @ <%= t(:display_start) %> <%= display.start_checking %> - <%= display.end_checking %> <%= t(:display_end) %>
+			<% else %>
+				<%= t(:say_no) %>
+			<% end %>
+		</td>
+	</tr>
+</table>

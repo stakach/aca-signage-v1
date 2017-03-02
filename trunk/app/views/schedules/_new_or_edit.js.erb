@@ -1,0 +1,80 @@
+
+$('#dialog').html('<%= escape_javascript(render('form'))%>');
+
+$('.indatetime input').datepicker({
+	duration: '',
+	showTime: true,
+	constrainInput: false,
+	dateFormat: 'yy-mm-dd',
+	onClose: function(dateText, inst) {
+		var $start = $('#schedule_do_start');
+		var $end = $('#schedule_do_end');
+		var checked = $('#schedule_all_day').is(':checked');
+	
+		if(checked)
+		{
+			//
+			// Checks start and end times are correct
+			//
+			if($(this).attr('id') == "schedule_do_end")
+			{
+				$end.val(dateText.substring(0, 11) + "11:59 pm");
+			}
+			else if($(this).attr('id') == "schedule_do_start")
+			{
+				$start.val(dateText.substring(0, 11) + "12:00 am");
+			}
+		}
+		
+		var start = Date.parse($start.val());
+		var end = Date.parse($end.val());
+		
+		if(start >= end)
+		{
+			if(checked)	// Add one day
+			{
+				$end.val($start.val().substring(0, 11) + "11:59 pm");
+			} else {	// Add two hours? too hard so just replicating start time
+				$end.val($start.val());
+			}
+		}
+	}
+});
+
+//
+// Show or hide the repeat end date field
+//
+$('#dialog #visible_selection select').change(function() {
+	if($('#dialog #visible_selection select').attr('value') == '0')
+	{
+		$('#hidden_repeat').hide();
+	}
+	else
+	{
+		$('#hidden_repeat').show();
+	}
+});
+
+//
+// Make sure start and end times are valid for all day events
+//
+$('#schedule_all_day').change(function() {
+	if($(this).is(':checked'))
+	{
+		$('#schedule_do_start').val($('#schedule_do_start').val().substring(0, 11) + "12:00 am");
+		$('#schedule_do_end').val($('#schedule_do_end').val().substring(0, 11) + "11:59 pm");
+	}
+});
+
+
+//
+// Make sure only one: emergancy or exclusive can be selected
+//
+$('#schedule_emergency, #schedule_exclusive').change(function() {
+	var self = $(this);
+	if(self.is(':checked'))
+	{
+		$('#schedule_emergency, #schedule_exclusive').prop("checked", false);
+		self.prop("checked", true);
+	}
+});

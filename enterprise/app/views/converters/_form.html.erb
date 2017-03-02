@@ -1,0 +1,20 @@
+<%= form_for(@converter, :as => :converter, :url => { :action => :create }) do |f| %>
+
+	<p>
+		<%= f.label :description, t(:converters_edit_description) %><%= mark_required(@converter, :description) %><br />
+		<%= f.text_field :description %>
+	</p>
+	<p>
+		<%= f.label :applies_to, t(:converters_edit_applies) %><%= mark_required(@converter, :applies_to) %><br />
+		<%= f.text_field :applies_to %>
+	</p>
+	<p>
+		<%= f.label :accepts_file_id, t(:converters_edit_converts) %><%= mark_required(@converter, :accepts_file_id) %><br />
+		<%= f.select(:accepts_file_id, AcceptsFile.all.map {|u| [u.mime,u.id]}, {:include_blank => true}) %>
+	</p>
+	<p>
+		<%= f.label :command, t(:converters_edit_command) %><%= mark_required(@converter, :command) %><br />
+		<%= f.text_area :command %>
+	</p>
+
+<% end %>

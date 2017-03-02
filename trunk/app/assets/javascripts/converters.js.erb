@@ -1,0 +1,121 @@
+//= require application
+
+
+
+function doEdit() {
+	var id = get_id($('.context-menu-selection'));
+
+	$.ajax({
+		type: "GET",
+		url: '/' + pageLanguage + '/converters/' + id + '/edit',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, lang_convert_edit_fail, errorThrown);
+		}
+	});
+}
+
+$(function() {
+	//
+	// Show appropriate preview
+	//
+	customPreview = function() {
+		var len = $('.context-menu-selection').length;
+		if (len == 0) {
+			$preview.html("<img src='<%= asset_path 'footer/converters.png' %>' alt='" + lang_preview_nothing_selected + "' />");
+			scalePreview();
+		}
+		else if (len == 1) {
+			var id = get_id($('.context-menu-selection'));
+			// ajax down the preview for the current selected item
+			$.ajax({
+				dataType: 'script',
+				url: '/' + pageLanguage + '/converters/' + id
+			});
+		}
+	};
+
+
+	//
+	// Add menu items
+	//
+	$.extend(menuBindings, {
+		'edit-converter': function(t) {
+			doEdit();
+		}
+	});
+
+	showMenu = function(e, menu) {	// Only show relavant items
+		if ($('.context-menu-selection').length > 1)
+			$('#edit-converter', menu).remove();
+	};
+
+
+	//
+	// Deleting Items
+	//
+	deleteItems = function(object_ids) {
+		$.ajax({
+			type: "POST", url: '/converters/destroy',
+			data: {
+				'_method': 'delete',
+				'converters': object_ids
+			},
+			dataType: "script",
+			success: function(data, textStatus, xhr) {
+
+				$.each(object_ids, function(index, val) {
+					$('#converter_' + val).fadeOut("slow", function() {
+						$('#converter_' + val).remove();
+						listLength -= 1;
+
+						$('.context-menu-selection').removeClass('context-menu-selection');
+						
+						if (index == object_ids.length - 1) {
+							defaultPreview(); 	// Update the preview
+							customPreview();
+						}
+					});
+				});
+
+				$.noticeAdd({ text: object_ids.length + " " + lang_convert_delete_success, stayTime: 6000 });
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				error_notice(xhr, lang_convert_delete_failed, errorThrown);
+			}
+		});
+	};
+
+	//
+	// Sortable items
+	//
+	$('table.converters tbody').sortable({
+		items: 'tr',
+		handle: '.sortable',
+		axis: 'y',
+		forceHelperSize: true,
+		containment: '#right',
+		tolerance: 'pointer',
+		sort: function(event, ui) {
+			ui.helper.children(':not(td.sortable, td.description, td.sortable > *, td.name > *)').hide();
+		},
+		stop: function(event, ui) {
+			ui.item.children().show();
+		},
+		update: function(event, ui) {
+			var order = $(this).sortable('serialize');
+			order = "_method=put&" + order;
+			$.ajax({
+				type: "POST", url: '/converters/order',
+				data: order,
+				dataType: "script",
+				success: function(data, textStatus, xhr) {
+					$.noticeAdd({ text: lang_item_sort_success, stayTime: 6000 });
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					error_notice(xhr, lang_item_sort_failed, errorThrown);
+				}
+			});
+		}
+	});
+});

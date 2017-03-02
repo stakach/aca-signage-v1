@@ -1,0 +1,14 @@
+
+$('#footer-left').append('<%= escape_javascript(render('groups/preview_left', :group => @group))%>');
+$preview.html('<%= escape_javascript(image_tag('footer/calendar.png', :alt => @group.name, :title => @group.name)) %>');
+scalePreview();
+
+$('#footer-left .editable').click(function(){
+	$.ajax({
+		type: "GET", url: '<%= edit_group_path(@group.id) %>',
+		dataType: "script",
+		error: function(xhr, textStatus, errorThrown) {
+			error_notice(xhr, '<%= "#{t(:group)} #{t(:edit_failed)}." %>', errorThrown);
+		}
+	});
+});

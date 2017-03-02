@@ -1,0 +1,16 @@
+
+$('#playlist_prev_left').html('<%= escape_javascript(render('edit_left', :playlist => @playlist))%>');
+
+{
+	var index,
+		el = $('#playlist_default_transition');
+	for (index in EFFECTS) {
+		el.append($('<option>', {
+			value: index,
+			text: EFFECTS[index]
+		}));
+	}
+	el.val(el.data('current'));
+}
+
+$('#playlist_name').focus();
